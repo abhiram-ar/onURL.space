@@ -70,12 +70,12 @@
     const link = document.getElementById('link')
     link.href = '/' + hash
 
-    const typeNumber = 0;
-    const errorCorrectionLevel = 'L';
-    const qr = qrcode(typeNumber, errorCorrectionLevel);
-    qr.addData(url);
-    qr.make();
-    document.getElementById('qrcode').innerHTML = qr.createSvgTag({cellSize: 8, margin: 0});
+    const typeNumber = 0
+    const errorCorrectionLevel = 'L'
+    const qr = qrcode(typeNumber, errorCorrectionLevel)
+    qr.addData(url)
+    qr.make()
+    document.getElementById('qrcode').innerHTML = qr.createSvgTag({cellSize: 8, margin: 0})
   }
 
   render()
