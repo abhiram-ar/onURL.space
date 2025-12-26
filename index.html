@@ -41,12 +41,6 @@
   addEventListener('DOMContentLoaded', load)
   addEventListener('hashchange', load)
   addEventListener('load', () => new MutationObserver(save).observe(article, {attributeFilter: ['style']}))
-  addEventListener('keydown', e => {
-    if ((e.metaKey || e.ctrlKey) && e.key === 's') {
-      e.preventDefault()
-      saveToFile()
-    }
-  })
 
   async function load() {
     try {
@@ -69,20 +63,6 @@
     if (location.hash !== hash) history.replaceState({}, '', hash)
     try { localStorage.setItem('hash', hash) } catch (e) {}
     updateTitle()
-  }
-
-  async function saveToFile() {
-    try {
-      const handle = await window.showSaveFilePicker({
-        suggestedName: (document.title === 'Textarea' ? 'untitled' : document.title) + '.txt',
-        types: [{description: 'Text File', accept: {'text/plain': ['.txt']}}],
-      })
-      const writable = await handle.createWritable()
-      await writable.write(article.textContent)
-      await writable.close()
-    } catch (e) {
-      if (e.name !== 'AbortError') console.error(e)
-    }
   }
 
   async function set(hash) {
