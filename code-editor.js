@@ -3,85 +3,70 @@
  * Extensible syntax highlighting and code execution for textarea.my
  */
 
-// Language configurations - extensible for future languages
+// Shared token patterns for C-like languages
+const cLikePatterns = [
+  { type: 'comment', re: /\/\/[^\n]*/y },
+  { type: 'comment', re: /\/\*[\s\S]*?\*\//y },
+  { type: 'string', re: /"(?:[^"\\]|\\.)*"/y },
+  { type: 'string', re: /'(?:[^'\\]|\\.)*'/y },
+  { type: 'string', re: /\`(?:[^\`\\]|\\.)*\`/y },
+  { type: 'regex', re: /\/(?![*/])(?:[^\\/\n]|\\.)+\/[gimsuy]*/y },
+  { type: 'number', re: /\b(?:0x[\da-fA-F]+|0b[01]+|0o[0-7]+|\d+\.?\d*(?:e[+-]?\d+)?)\b/y },
+  { type: 'operator', re: /[+\-*/%=<>!&|^~?:]+|\.{3}/y },
+  { type: 'word', re: /[a-zA-Z_$][\w$]*/y },
+  { type: 'punctuation', re: /[{}()\[\];,.]/y },
+  { type: 'whitespace', re: /\s+/y },
+]
+
+// Base JS keywords and builtins (shared between JS and TS)
+const jsKeywords = [
+  'async', 'await', 'break', 'case', 'catch', 'class', 'const', 'continue',
+  'debugger', 'default', 'delete', 'do', 'else', 'export', 'extends', 'finally',
+  'for', 'function', 'if', 'import', 'in', 'instanceof', 'let', 'new', 'of',
+  'return', 'static', 'super', 'switch', 'this', 'throw', 'try', 'typeof',
+  'var', 'void', 'while', 'with', 'yield', 'true', 'false', 'null', 'undefined'
+]
+
+const jsBuiltins = [
+  'console', 'window', 'document', 'Array', 'Object', 'String', 'Number',
+  'Boolean', 'Function', 'Symbol', 'Map', 'Set', 'WeakMap', 'WeakSet',
+  'Promise', 'Proxy', 'Reflect', 'JSON', 'Math', 'Date', 'RegExp', 'Error',
+  'TypeError', 'SyntaxError', 'ReferenceError', 'parseInt', 'parseFloat',
+  'isNaN', 'isFinite', 'encodeURI', 'decodeURI', 'setTimeout', 'setInterval',
+  'clearTimeout', 'clearInterval', 'fetch', 'URL', 'URLSearchParams',
+  'TextEncoder', 'TextDecoder', 'Blob', 'File', 'FileReader', 'FormData',
+  'XMLHttpRequest', 'WebSocket', 'localStorage', 'sessionStorage',
+  'Uint8Array', 'Int8Array', 'Uint16Array', 'Int16Array', 'Uint32Array',
+  'Int32Array', 'Float32Array', 'Float64Array', 'ArrayBuffer', 'DataView'
+]
+
+// Language configurations
 const languages = {
   javascript: {
     name: 'JavaScript',
     aliases: ['js', 'javascript'],
     runnable: true,
-    keywords: new Set([
-      'async', 'await', 'break', 'case', 'catch', 'class', 'const', 'continue',
-      'debugger', 'default', 'delete', 'do', 'else', 'export', 'extends', 'finally',
-      'for', 'function', 'if', 'import', 'in', 'instanceof', 'let', 'new', 'of',
-      'return', 'static', 'super', 'switch', 'this', 'throw', 'try', 'typeof',
-      'var', 'void', 'while', 'with', 'yield', 'true', 'false', 'null', 'undefined'
-    ]),
-    builtins: new Set([
-      'console', 'window', 'document', 'Array', 'Object', 'String', 'Number',
-      'Boolean', 'Function', 'Symbol', 'Map', 'Set', 'WeakMap', 'WeakSet',
-      'Promise', 'Proxy', 'Reflect', 'JSON', 'Math', 'Date', 'RegExp', 'Error',
-      'TypeError', 'SyntaxError', 'ReferenceError', 'parseInt', 'parseFloat',
-      'isNaN', 'isFinite', 'encodeURI', 'decodeURI', 'setTimeout', 'setInterval',
-      'clearTimeout', 'clearInterval', 'fetch', 'URL', 'URLSearchParams',
-      'TextEncoder', 'TextDecoder', 'Blob', 'File', 'FileReader', 'FormData',
-      'XMLHttpRequest', 'WebSocket', 'localStorage', 'sessionStorage',
-      'Uint8Array', 'Int8Array', 'Uint16Array', 'Int16Array', 'Uint32Array',
-      'Int32Array', 'Float32Array', 'Float64Array', 'ArrayBuffer', 'DataView'
-    ]),
-    tokenPatterns: [
-      { type: 'comment', re: /\/\/[^\n]*/y },
-      { type: 'comment', re: /\/\*[\s\S]*?\*\//y },
-      { type: 'string', re: /"(?:[^"\\]|\\.)*"/y },
-      { type: 'string', re: /'(?:[^'\\]|\\.)*'/y },
-      { type: 'string', re: /`(?:[^`\\]|\\.)*`/y },
-      { type: 'regex', re: /\/(?![*/])(?:[^\\/\n]|\\.)+\/[gimsuy]*/y },
-      { type: 'number', re: /\b(?:0x[\da-fA-F]+|0b[01]+|0o[0-7]+|\d+\.?\d*(?:e[+-]?\d+)?)\b/y },
-      { type: 'operator', re: /[+\-*/%=<>!&|^~?:]+|\.{3}/y },
-      { type: 'word', re: /[a-zA-Z_$][\w$]*/y },
-      { type: 'punctuation', re: /[{}()\[\];,.]/y },
-      { type: 'whitespace', re: /\s+/y },
-    ]
+    keywords: new Set(jsKeywords),
+    builtins: new Set(jsBuiltins),
+    tokenPatterns: cLikePatterns
   },
   typescript: {
     name: 'TypeScript',
     aliases: ['ts', 'typescript'],
-    runnable: true, // Runs as JS (without type checking)
+    runnable: true,
     keywords: new Set([
-      'async', 'await', 'break', 'case', 'catch', 'class', 'const', 'continue',
-      'debugger', 'default', 'delete', 'do', 'else', 'export', 'extends', 'finally',
-      'for', 'function', 'if', 'import', 'in', 'instanceof', 'let', 'new', 'of',
-      'return', 'static', 'super', 'switch', 'this', 'throw', 'try', 'typeof',
-      'var', 'void', 'while', 'with', 'yield', 'true', 'false', 'null', 'undefined',
-      // TypeScript specific
+      ...jsKeywords,
       'type', 'interface', 'enum', 'namespace', 'module', 'declare', 'abstract',
       'implements', 'private', 'protected', 'public', 'readonly', 'as', 'is',
       'keyof', 'infer', 'never', 'unknown', 'any'
     ]),
     builtins: new Set([
-      'console', 'window', 'document', 'Array', 'Object', 'String', 'Number',
-      'Boolean', 'Function', 'Symbol', 'Map', 'Set', 'WeakMap', 'WeakSet',
-      'Promise', 'Proxy', 'Reflect', 'JSON', 'Math', 'Date', 'RegExp', 'Error',
-      'TypeError', 'SyntaxError', 'ReferenceError', 'parseInt', 'parseFloat',
-      'isNaN', 'isFinite', 'encodeURI', 'decodeURI', 'setTimeout', 'setInterval',
-      'clearTimeout', 'clearInterval', 'fetch', 'URL', 'URLSearchParams',
-      'TextEncoder', 'TextDecoder', 'Blob', 'File', 'FileReader', 'FormData',
-      'XMLHttpRequest', 'WebSocket', 'localStorage', 'sessionStorage',
-      'Uint8Array', 'Int8Array', 'Uint16Array', 'Int16Array', 'Uint32Array',
-      'Int32Array', 'Float32Array', 'Float64Array', 'ArrayBuffer', 'DataView',
-      // TypeScript specific
+      ...jsBuiltins,
       'Partial', 'Required', 'Readonly', 'Record', 'Pick', 'Omit', 'Exclude',
       'Extract', 'NonNullable', 'Parameters', 'ReturnType', 'InstanceType'
     ]),
     tokenPatterns: [
-      { type: 'comment', re: /\/\/[^\n]*/y },
-      { type: 'comment', re: /\/\*[\s\S]*?\*\//y },
-      { type: 'string', re: /"(?:[^"\\]|\\.)*"/y },
-      { type: 'string', re: /'(?:[^'\\]|\\.)*'/y },
-      { type: 'string', re: /`(?:[^`\\]|\\.)*`/y },
-      { type: 'regex', re: /\/(?![*/])(?:[^\\/\n]|\\.)+\/[gimsuy]*/y },
-      { type: 'number', re: /\b(?:0x[\da-fA-F]+|0b[01]+|0o[0-7]+|\d+\.?\d*(?:e[+-]?\d+)?)\b/y },
-      { type: 'operator', re: /[+\-*/%=<>!&|^~?:]+|\.{3}/y },
-      { type: 'word', re: /[a-zA-Z_$][\w$]*/y },
+      ...cLikePatterns.slice(0, -2),
       { type: 'punctuation', re: /[{}()\[\];,.<>]/y },
       { type: 'whitespace', re: /\s+/y },
     ]
@@ -112,10 +97,8 @@ const languages = {
       { type: 'comment', re: /#[^\n]*/y },
       { type: 'string', re: /"""[\s\S]*?"""/y },
       { type: 'string', re: /'''[\s\S]*?'''/y },
-      { type: 'string', re: /"(?:[^"\\]|\\.)*"/y },
-      { type: 'string', re: /'(?:[^'\\]|\\.)*'/y },
-      { type: 'string', re: /f"(?:[^"\\]|\\.)*"/y },
-      { type: 'string', re: /f'(?:[^'\\]|\\.)*'/y },
+      { type: 'string', re: /f?"(?:[^"\\]|\\.)*"/y },
+      { type: 'string', re: /f?'(?:[^'\\]|\\.)*'/y },
       { type: 'number', re: /\b(?:0x[\da-fA-F]+|0b[01]+|0o[0-7]+|\d+\.?\d*(?:e[+-]?\d+)?j?)\b/y },
       { type: 'operator', re: /[+\-*/%=<>!&|^~@:]+/y },
       { type: 'word', re: /[a-zA-Z_]\w*/y },
@@ -130,8 +113,7 @@ const languages = {
     tokenPatterns: [
       { type: 'comment', re: /<!--[\s\S]*?-->/y },
       { type: 'tag', re: /<\/?[a-zA-Z][a-zA-Z0-9-]*(?:\s+[^>]*)?\/?>/y },
-      { type: 'string', re: /"[^"]*"/y },
-      { type: 'string', re: /'[^']*'/y },
+      { type: 'string', re: /"[^"]*"|'[^']*'/y },
       { type: 'whitespace', re: /\s+/y },
     ]
   },
@@ -139,13 +121,10 @@ const languages = {
     name: 'CSS',
     aliases: ['css'],
     runnable: false,
-    keywords: new Set([
-      'important', 'inherit', 'initial', 'unset', 'revert'
-    ]),
+    keywords: new Set(['important', 'inherit', 'initial', 'unset', 'revert']),
     tokenPatterns: [
       { type: 'comment', re: /\/\*[\s\S]*?\*\//y },
-      { type: 'string', re: /"(?:[^"\\]|\\.)*"/y },
-      { type: 'string', re: /'(?:[^'\\]|\\.)*'/y },
+      { type: 'string', re: /"(?:[^"\\]|\\.)*"|'(?:[^'\\]|\\.)*'/y },
       { type: 'number', re: /\b\d+\.?\d*(?:px|em|rem|%|vh|vw|deg|s|ms)?\b/y },
       { type: 'selector', re: /[.#]?[a-zA-Z_-][a-zA-Z0-9_-]*/y },
       { type: 'operator', re: /[:;{}(),>+~*]/y },
@@ -171,7 +150,7 @@ const languages = {
     runnable: false,
     tokenPatterns: [
       { type: 'heading', re: /^#{1,6}\s+.+$/my },
-      { type: 'code', re: /`[^`\n]+`/y },
+      { type: 'code', re: /\`[^\`\n]+\`/y },
       { type: 'bold', re: /\*\*[^*]+\*\*/y },
       { type: 'italic', re: /\*[^*]+\*/y },
       { type: 'link', re: /\[[^\]]+\]\([^)]+\)/y },
@@ -194,10 +173,8 @@ const languages = {
     ]),
     tokenPatterns: [
       { type: 'comment', re: /#[^\n]*/y },
-      { type: 'string', re: /"(?:[^"\\]|\\.)*"/y },
-      { type: 'string', re: /'[^']*'/y },
-      { type: 'variable', re: /\$[a-zA-Z_][a-zA-Z0-9_]*/y },
-      { type: 'variable', re: /\$\{[^}]+\}/y },
+      { type: 'string', re: /"(?:[^"\\]|\\.)*"|'[^']*'/y },
+      { type: 'variable', re: /\$(?:[a-zA-Z_][a-zA-Z0-9_]*|\{[^}]+\})/y },
       { type: 'number', re: /\b\d+\b/y },
       { type: 'word', re: /[a-zA-Z_][a-zA-Z0-9_-]*/y },
       { type: 'operator', re: /[|&;<>()]/y },
@@ -225,8 +202,7 @@ const languages = {
     tokenPatterns: [
       { type: 'comment', re: /--[^\n]*/y },
       { type: 'comment', re: /\/\*[\s\S]*?\*\//y },
-      { type: 'string', re: /'(?:[^'\\]|\\.)*'/y },
-      { type: 'string', re: /"(?:[^"\\]|\\.)*"/y },
+      { type: 'string', re: /'(?:[^'\\]|\\.)*'|"(?:[^"\\]|\\.)*"/y },
       { type: 'number', re: /\b\d+\.?\d*\b/y },
       { type: 'word', re: /[a-zA-Z_][a-zA-Z0-9_]*/y },
       { type: 'operator', re: /[=<>!+\-*/%]/y },
@@ -236,15 +212,42 @@ const languages = {
   }
 }
 
-function getLanguageConfig(alias) {
-  if (!alias) return null
-  const lower = alias.toLowerCase()
-  for (const [, config] of Object.entries(languages)) {
-    if (config.aliases.includes(lower)) {
-      return config
-    }
+// Build alias lookup map for O(1) language resolution
+const aliasMap = new Map()
+for (const [key, config] of Object.entries(languages)) {
+  for (const alias of config.aliases) {
+    aliasMap.set(alias, config)
   }
-  return null
+}
+
+// Token type to CSS class mapping
+const tokenClassMap = {
+  comment: 'ce-comment',
+  string: 'ce-string',
+  number: 'ce-number',
+  regex: 'ce-regex',
+  operator: 'ce-operator',
+  keyword: 'ce-keyword',
+  tag: 'ce-tag',
+  selector: 'ce-selector',
+  heading: 'ce-heading',
+  code: 'ce-code',
+  bold: 'ce-bold',
+  italic: 'ce-italic',
+  link: 'ce-link',
+  variable: 'ce-variable',
+}
+
+// Reusable SVG icons
+const icons = {
+  copy: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>',
+  copied: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>',
+  run: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>',
+}
+
+// Get language config by alias - O(1) lookup
+function getLanguageConfig(alias) {
+  return alias ? aliasMap.get(alias.toLowerCase()) ?? null : null
 }
 
 // Check if a language is supported for syntax highlighting
@@ -254,111 +257,77 @@ function isLanguageSupported(alias) {
 
 // Check if a language can be run in browser
 function isLanguageRunnable(alias) {
-  const config = getLanguageConfig(alias)
-  return config?.runnable ?? false
+  return getLanguageConfig(alias)?.runnable ?? false
 }
 
-// Escape HTML entities
+// Optimized HTML escape - single pass with replace map
+const escapeMap = { '&': '&amp;', '<': '&lt;', '>': '&gt;' }
+const escapeRe = /[&<>]/g
 function escapeHtml(s) {
-  return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+  return s.replace(escapeRe, c => escapeMap[c])
 }
 
 // Highlight code based on language
 function highlightCode(code, langAlias) {
   const config = getLanguageConfig(langAlias)
   
-  // No highlighting for unsupported languages
-  if (!config || !config.tokenPatterns) {
+  if (!config?.tokenPatterns) {
     return escapeHtml(code)
   }
 
-  let html = ''
+  const parts = []
   let i = 0
   const { tokenPatterns, keywords, builtins } = config
+  const len = code.length
 
-  while (i < code.length) {
+  while (i < len) {
     let matched = false
+    
     for (const pat of tokenPatterns) {
       pat.re.lastIndex = i
       const match = pat.re.exec(code)
+      
       if (match && match.index === i) {
         const token = match[0]
-        let className = null
+        let className = tokenClassMap[pat.type]
 
-        switch (pat.type) {
-          case 'comment':
-            className = 'ce-comment'
-            break
-          case 'string':
-            className = 'ce-string'
-            break
-          case 'number':
-            className = 'ce-number'
-            break
-          case 'regex':
-            className = 'ce-regex'
-            break
-          case 'operator':
-            className = 'ce-operator'
-            break
-          case 'keyword':
+        // Handle word tokens (keywords, builtins, functions)
+        if (pat.type === 'word') {
+          const lowerToken = token.toLowerCase()
+          if (keywords?.has(token) || keywords?.has(lowerToken)) {
             className = 'ce-keyword'
-            break
-          case 'tag':
-            className = 'ce-tag'
-            break
-          case 'selector':
-            className = 'ce-selector'
-            break
-          case 'heading':
-            className = 'ce-heading'
-            break
-          case 'code':
-            className = 'ce-code'
-            break
-          case 'bold':
-            className = 'ce-bold'
-            break
-          case 'italic':
-            className = 'ce-italic'
-            break
-          case 'link':
-            className = 'ce-link'
-            break
-          case 'variable':
-            className = 'ce-variable'
-            break
-          case 'word':
-            if (keywords?.has(token)) {
-              className = 'ce-keyword'
-            } else if (builtins?.has(token)) {
-              className = 'ce-builtin'
-            } else if (i + token.length < code.length && code[i + token.length] === '(') {
-              className = 'ce-function'
-            }
-            break
+          } else if (builtins?.has(token) || builtins?.has(lowerToken)) {
+            className = 'ce-builtin'
+          } else if (i + token.length < len && code[i + token.length] === '(') {
+            className = 'ce-function'
+          }
         }
 
-        html += className ? `<span class="${className}">${escapeHtml(token)}</span>` : escapeHtml(token)
+        parts.push(className 
+          ? '<span class="' + className + '">' + escapeHtml(token) + '</span>' 
+          : escapeHtml(token))
         i += token.length
         matched = true
         break
       }
     }
+    
     if (!matched) {
-      html += escapeHtml(code[i])
+      parts.push(escapeHtml(code[i]))
       i++
     }
   }
-  return html
+  
+  return parts.join('')
 }
 
+// Strip TypeScript type annotations for execution
 function stripTypeAnnotations(code) {
   return code
-    .replace(/:\s*[A-Za-z<>[\]|&,\s]+(?=[,)\]=;])/g, '') // Type annotations
-    .replace(/\bas\s+[A-Za-z<>[\]|&]+/g, '') // Type assertions
-    .replace(/<[A-Za-z<>[\]|&,\s]+>(?=\()/g, '') // Generic type parameters in calls
-    .replace(/^(interface|type)\s+.*$/gm, '') // Interface/type declarations
+    .replace(/:\s*[A-Za-z<>[\]|&,\s]+(?=[,)\]=;])/g, '')
+    .replace(/\bas\s+[A-Za-z<>[\]|&]+/g, '')
+    .replace(/<[A-Za-z<>[\]|&,\s]+>(?=\()/g, '')
+    .replace(/^(interface|type)\s+.*$/gm, '')
 }
 
 // Execute JavaScript/TypeScript code
@@ -373,189 +342,113 @@ function executeCode(code, langAlias, outputContent) {
   }
 
   try {
-    // For TypeScript, strip type annotations before execution
-    let executableCode = code
-    if (langAlias === 'ts' || langAlias === 'typescript') {
-      executableCode = stripTypeAnnotations(code)
-    }
+    const executableCode = (langAlias === 'ts' || langAlias === 'typescript')
+      ? stripTypeAnnotations(code)
+      : code
 
-    // Create a function with custom console in scope
-    const fn = new Function('console', executableCode)
-    fn(customConsole)
-
-    // Render logs
-    logs.forEach(({ type, args }) => {
-      const line = document.createElement('div')
-      line.className = type
-      line.textContent = args.map(arg => {
-        if (typeof arg === 'object') {
-          try { return JSON.stringify(arg, null, 2) }
-          catch { return String(arg) }
-        }
-        return String(arg)
-      }).join(' ')
-      outputContent.appendChild(line)
-    })
+    new Function('console', executableCode)(customConsole)
 
     if (logs.length === 0) {
-      const line = document.createElement('div')
-      line.className = 'info'
-      line.textContent = '✓ Code executed successfully (no output)'
-      outputContent.appendChild(line)
+      logs.push({ type: 'info', args: ['✓ Code executed successfully (no output)'] })
     }
   } catch (err) {
+    logs.push({ type: 'error', args: [err.toString()] })
+  }
+
+  // Batch DOM updates with fragment
+  const frag = document.createDocumentFragment()
+  for (const { type, args } of logs) {
     const line = document.createElement('div')
-    line.className = 'error'
-    line.textContent = err.toString()
-    outputContent.appendChild(line)
+    line.className = type
+    line.textContent = args.map(arg => 
+      typeof arg === 'object' 
+        ? ((() => { try { return JSON.stringify(arg, null, 2) } catch { return String(arg) } })())
+        : String(arg)
+    ).join(' ')
+    frag.appendChild(line)
+  }
+  outputContent.appendChild(frag)
+}
+
+// Create output area element
+function createOutputArea(onClear) {
+  const output = document.createElement('div')
+  output.className = 'code-editor-output'
+  output.style.display = 'none'
+
+  const header = document.createElement('div')
+  header.className = 'code-editor-output-header'
+
+  const label = document.createElement('span')
+  label.textContent = 'Output'
+
+  const clearBtn = document.createElement('button')
+  clearBtn.className = 'code-editor-output-clear'
+  clearBtn.textContent = 'Clear'
+  clearBtn.onclick = e => {
+    e.stopPropagation()
+    onClear()
+  }
+
+  header.append(label, clearBtn)
+
+  const content = document.createElement('div')
+  content.className = 'code-editor-output-content'
+
+  output.append(header, content)
+  
+  return { output, content }
+}
+
+// Debounce utility
+function debounce(ms, fn) {
+  let timer
+  return (...args) => {
+    clearTimeout(timer)
+    timer = setTimeout(() => fn(...args), ms)
   }
 }
 
+// Create code editor element
 function createCodeEditor(rawCode, saveCallback) {
-  const langMatch = rawCode.match(/^```(\w*)/)
+  const langMatch = rawCode.match(/^\`\`\`(\w*)/)
   const langAlias = langMatch?.[1] || ''
   const firstNewline = rawCode.indexOf('\n')
-  const codeBody = rawCode.slice(firstNewline + 1, -4).trim() // Remove fence and closing ```
+  const codeBody = rawCode.slice(firstNewline + 1, -4).trim()
 
   const langConfig = getLanguageConfig(langAlias)
-  const displayName = langConfig?.name || langAlias.toUpperCase() || 'Plain Text'
-  const canRun = isLanguageRunnable(langAlias)
 
+  // Create container
   const container = document.createElement('div')
   container.className = 'code-editor'
   container.contentEditable = 'false'
-
-  // Store raw markdown for saving
   container.dataset.raw = rawCode
 
-  // Header with language selector and action buttons
-  const header = document.createElement('div')
-  header.className = 'code-editor-header'
+  // State
+  let currentLangAlias = langAlias
+  let output = null
+  let outputContent = null
 
-  // Language selector dropdown
+  // Create language selector
   const langSelect = document.createElement('select')
   langSelect.className = 'code-editor-lang-select'
   langSelect.title = 'Change language'
-  
-  // Add "Plain Text" option
+
   const plainOption = document.createElement('option')
   plainOption.value = ''
   plainOption.textContent = 'Plain Text'
+  plainOption.selected = !langConfig
   langSelect.appendChild(plainOption)
-  
-  // Add all supported languages
-  for (const [key, config] of Object.entries(languages)) {
+
+  for (const config of Object.values(languages)) {
     const option = document.createElement('option')
-    option.value = config.aliases[0] // Use first alias as value
+    option.value = config.aliases[0]
     option.textContent = config.name
-    if (config.aliases.includes(langAlias.toLowerCase())) {
-      option.selected = true
-    }
+    option.selected = config.aliases.includes(langAlias.toLowerCase())
     langSelect.appendChild(option)
   }
-  
-  if (!langConfig) {
-    plainOption.selected = true
-  }
 
-  // Track current language for updates
-  let currentLangAlias = langAlias
-
-  const actions = document.createElement('div')
-  actions.className = 'code-editor-actions'
-
-  const copyBtn = document.createElement('button')
-  copyBtn.className = 'code-editor-btn copy'
-  copyBtn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy`
-
-  actions.appendChild(copyBtn)
-
-  // Only add run button for runnable languages
-  let runBtn = null
-  if (canRun) {
-    runBtn = document.createElement('button')
-    runBtn.className = 'code-editor-btn run'
-    runBtn.innerHTML = `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>Run`
-    actions.appendChild(runBtn)
-  }
-
-  // Function to update run button visibility
-  const updateRunButton = (newLangAlias) => {
-    const newCanRun = isLanguageRunnable(newLangAlias)
-    if (newCanRun && !runBtn) {
-      runBtn = document.createElement('button')
-      runBtn.className = 'code-editor-btn run'
-      runBtn.innerHTML = `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>Run`
-      runBtn.addEventListener('click', (e) => {
-        e.stopPropagation()
-        if (!output) {
-          // Create output area if it doesn't exist
-          output = document.createElement('div')
-          output.className = 'code-editor-output'
-          
-          const outputHeader = document.createElement('div')
-          outputHeader.className = 'code-editor-output-header'
-          
-          const outputLabel = document.createElement('span')
-          outputLabel.textContent = 'Output'
-          
-          const clearBtn = document.createElement('button')
-          clearBtn.className = 'code-editor-output-clear'
-          clearBtn.textContent = 'Clear'
-          clearBtn.addEventListener('click', (e) => {
-            e.stopPropagation()
-            output.style.display = 'none'
-            outputContent.innerHTML = ''
-          })
-          
-          outputHeader.appendChild(outputLabel)
-          outputHeader.appendChild(clearBtn)
-          
-          outputContent = document.createElement('div')
-          outputContent.className = 'code-editor-output-content'
-          
-          output.appendChild(outputHeader)
-          output.appendChild(outputContent)
-          container.appendChild(output)
-        }
-        output.style.display = 'block'
-        outputContent.innerHTML = ''
-        executeCode(textarea.value, currentLangAlias, outputContent)
-      })
-      actions.appendChild(runBtn)
-    } else if (!newCanRun && runBtn) {
-      runBtn.remove()
-      runBtn = null
-      if (output) {
-        output.style.display = 'none'
-      }
-    }
-  }
-
-  // Language change handler
-  langSelect.addEventListener('change', () => {
-    currentLangAlias = langSelect.value
-    
-    // Update syntax highlighting
-    highlight.innerHTML = highlightCode(textarea.value, currentLangAlias)
-    
-    // Update raw data for saving
-    container.dataset.raw = '```' + currentLangAlias + '\n' + textarea.value + '\n```'
-    
-    // Update run button visibility
-    updateRunButton(currentLangAlias)
-    
-    // Trigger save
-    if (saveCallback) saveCallback()
-  })
-
-  header.appendChild(langSelect)
-  header.appendChild(actions)
-
-  // Code body with textarea for editing
-  const body = document.createElement('div')
-  body.className = 'code-editor-body'
-
+  // Create textarea and highlight
   const textarea = document.createElement('textarea')
   textarea.className = 'code-editor-textarea'
   textarea.value = codeBody
@@ -563,129 +456,145 @@ function createCodeEditor(rawCode, saveCallback) {
   textarea.autocomplete = 'off'
   textarea.autocapitalize = 'off'
 
-  // Syntax highlighting overlay
   const highlight = document.createElement('pre')
   highlight.className = 'code-editor-highlight'
   highlight.innerHTML = highlightCode(codeBody, langAlias)
 
-  body.appendChild(highlight)
-  body.appendChild(textarea)
+  // Create buttons
+  const copyBtn = document.createElement('button')
+  copyBtn.className = 'code-editor-btn copy'
+  copyBtn.innerHTML = icons.copy + 'Copy'
 
-  // Output area (only for runnable languages)
-  let output = null
-  let outputContent = null
-  if (canRun) {
-    output = document.createElement('div')
-    output.className = 'code-editor-output'
-    output.style.display = 'none'
-
-    const outputHeader = document.createElement('div')
-    outputHeader.className = 'code-editor-output-header'
-
-    const outputLabel = document.createElement('span')
-    outputLabel.textContent = 'Output'
-
-    const clearBtn = document.createElement('button')
-    clearBtn.className = 'code-editor-output-clear'
-    clearBtn.textContent = 'Clear'
-
-    outputHeader.appendChild(outputLabel)
-    outputHeader.appendChild(clearBtn)
-
-    outputContent = document.createElement('div')
-    outputContent.className = 'code-editor-output-content'
-
-    output.appendChild(outputHeader)
-    output.appendChild(outputContent)
-
-    // Clear button handler
-    clearBtn.addEventListener('click', (e) => {
+  let runBtn = null
+  
+  const createRunBtn = () => {
+    const btn = document.createElement('button')
+    btn.className = 'code-editor-btn run'
+    btn.innerHTML = icons.run + 'Run'
+    btn.onclick = e => {
       e.stopPropagation()
-      output.style.display = 'none'
-      outputContent.innerHTML = ''
-    })
-  }
-
-  container.appendChild(header)
-  container.appendChild(body)
-  if (output) container.appendChild(output)
-
-  // Calculate initial height based on content lines to prevent flicker
-  const lineCount = codeBody.split('\n').length
-  const lineHeight = 21 // 14px font * 1.5 line-height
-  const padding = 24 // 12px top + 12px bottom
-  const initialHeight = Math.max(80, lineCount * lineHeight + padding)
-  textarea.style.height = initialHeight + 'px'
-
-  // Auto-resize textarea and sync highlight
-  const autoResize = () => {
-    textarea.style.height = 'auto'
-    textarea.style.height = textarea.scrollHeight + 'px'
-  }
-  const updateHighlight = () => {
-    highlight.innerHTML = highlightCode(textarea.value, currentLangAlias)
-  }
-  textarea.addEventListener('input', () => {
-    autoResize()
-    updateHighlight()
-  })
-  textarea.addEventListener('scroll', () => {
-    highlight.scrollTop = textarea.scrollTop
-    highlight.scrollLeft = textarea.scrollLeft
-  })
-
-  const debounce = (ms, fn) => {
-    let timer
-    return (...args) => {
-      clearTimeout(timer)
-      timer = setTimeout(() => fn(...args), ms)
-    }
-  }
-
-  // Update raw data when code changes (for saving)
-  const debouncedSave = saveCallback ? debounce(500, saveCallback) : () => {}
-  textarea.addEventListener('input', () => {
-    container.dataset.raw = '```' + currentLangAlias + '\n' + textarea.value + '\n```'
-    debouncedSave()
-  })
-
-  // Copy button
-  copyBtn.addEventListener('click', async (e) => {
-    e.stopPropagation()
-    try {
-      await navigator.clipboard.writeText(textarea.value)
-      copyBtn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>Copied!`
-      setTimeout(() => {
-        copyBtn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy`
-      }, 2000)
-    } catch (err) {
-      console.error('Failed to copy:', err)
-    }
-  })
-
-  // Run button (only for runnable languages)
-  if (runBtn && output && outputContent) {
-    runBtn.addEventListener('click', (e) => {
-      e.stopPropagation()
+      if (!output) {
+        const outputArea = createOutputArea(() => {
+          output.style.display = 'none'
+          outputContent.innerHTML = ''
+        })
+        output = outputArea.output
+        outputContent = outputArea.content
+        container.appendChild(output)
+      }
       output.style.display = 'block'
       outputContent.innerHTML = ''
       executeCode(textarea.value, currentLangAlias, outputContent)
-    })
+    }
+    return btn
   }
 
-  // Prevent editor from handling clicks inside code editor
-  container.addEventListener('click', e => e.stopPropagation())
-  container.addEventListener('mousedown', e => e.stopPropagation())
-  container.addEventListener('keydown', e => e.stopPropagation())
-  container.addEventListener('keyup', e => e.stopPropagation())
-  container.addEventListener('input', e => e.stopPropagation())
+  // Actions container
+  const actions = document.createElement('div')
+  actions.className = 'code-editor-actions'
+  actions.appendChild(copyBtn)
+  
+  if (isLanguageRunnable(langAlias)) {
+    runBtn = createRunBtn()
+    actions.appendChild(runBtn)
+    
+    // Pre-create output area for runnable languages
+    const outputArea = createOutputArea(() => {
+      output.style.display = 'none'
+      outputContent.innerHTML = ''
+    })
+    output = outputArea.output
+    outputContent = outputArea.content
+  }
+
+  // Update run button based on language
+  const updateRunButton = (newLangAlias) => {
+    const canRun = isLanguageRunnable(newLangAlias)
+    if (canRun && !runBtn) {
+      runBtn = createRunBtn()
+      actions.appendChild(runBtn)
+    } else if (!canRun && runBtn) {
+      runBtn.remove()
+      runBtn = null
+      if (output) output.style.display = 'none'
+    }
+  }
+
+  // Sync function for updates
+  const updateRaw = () => {
+    container.dataset.raw = '\`\`\`' + currentLangAlias + '\n' + textarea.value + '\n\`\`\`'
+  }
+
+  // Event handlers
+  const debouncedSave = saveCallback ? debounce(500, saveCallback) : null
+
+  langSelect.onchange = () => {
+    currentLangAlias = langSelect.value
+    highlight.innerHTML = highlightCode(textarea.value, currentLangAlias)
+    updateRaw()
+    updateRunButton(currentLangAlias)
+    saveCallback?.()
+  }
+
+  textarea.oninput = () => {
+    // Auto-resize
+    textarea.style.height = 'auto'
+    textarea.style.height = textarea.scrollHeight + 'px'
+    // Update highlight
+    highlight.innerHTML = highlightCode(textarea.value, currentLangAlias)
+    // Update raw
+    updateRaw()
+    // Save
+    debouncedSave?.()
+  }
+
+  textarea.onscroll = () => {
+    highlight.scrollTop = textarea.scrollTop
+    highlight.scrollLeft = textarea.scrollLeft
+  }
+
+  copyBtn.onclick = async e => {
+    e.stopPropagation()
+    try {
+      await navigator.clipboard.writeText(textarea.value)
+      copyBtn.innerHTML = icons.copied + 'Copied!'
+      setTimeout(() => { copyBtn.innerHTML = icons.copy + 'Copy' }, 2000)
+    } catch (err) {
+      console.error('Failed to copy:', err)
+    }
+  }
+
+  // Prevent parent editor from handling events
+  const stopProp = e => e.stopPropagation()
+  container.addEventListener('click', stopProp)
+  container.addEventListener('mousedown', stopProp)
+  container.addEventListener('keydown', stopProp)
+  container.addEventListener('keyup', stopProp)
+  container.addEventListener('input', stopProp)
+
+  // Build DOM structure
+  const header = document.createElement('div')
+  header.className = 'code-editor-header'
+  header.append(langSelect, actions)
+
+  const body = document.createElement('div')
+  body.className = 'code-editor-body'
+  body.append(highlight, textarea)
+
+  container.append(header, body)
+  if (output) container.appendChild(output)
+
+  // Set initial height
+  const lineCount = codeBody.split('\n').length
+  const initialHeight = Math.max(80, lineCount * 21 + 24)
+  textarea.style.height = initialHeight + 'px'
 
   return container
 }
 
 // Check if raw code should use code editor
 function shouldUseCodeEditor(rawCode) {
-  return /^```\w*/i.test(rawCode)
+  return /^\`\`\`\w*/i.test(rawCode)
 }
 
 // Export for use in main app
