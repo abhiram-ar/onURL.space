@@ -434,13 +434,39 @@ function createCodeEditor(rawCode, saveCallback) {
   // Store raw markdown for saving
   container.dataset.raw = rawCode
 
-  // Header with language label and action buttons
+  // Header with language selector and action buttons
   const header = document.createElement('div')
   header.className = 'code-editor-header'
 
-  const langLabel = document.createElement('span')
-  langLabel.className = 'code-editor-lang'
-  langLabel.textContent = displayName
+  // Language selector dropdown
+  const langSelect = document.createElement('select')
+  langSelect.className = 'code-editor-lang-select'
+  langSelect.title = 'Change language'
+  
+  // Add "Plain Text" option
+  const plainOption = document.createElement('option')
+  plainOption.value = ''
+  plainOption.textContent = 'Plain Text'
+  langSelect.appendChild(plainOption)
+  
+  // Add all supported languages
+  for (const [key, config] of Object.entries(languages)) {
+    const option = document.createElement('option')
+    option.value = config.aliases[0] // Use first alias as value
+    option.textContent = config.name
+    if (config.aliases.includes(langAlias.toLowerCase())) {
+      option.selected = true
+    }
+    langSelect.appendChild(option)
+  }
+  
+  // If no language matched, select Plain Text
+  if (!langConfig) {
+    plainOption.selected = true
+  }
+
+  // Track current language for updates
+  let currentLangAlias = langAlias
 
   const actions = document.createElement('div')
   actions.className = 'code-editor-actions'
@@ -460,7 +486,77 @@ function createCodeEditor(rawCode, saveCallback) {
     actions.appendChild(runBtn)
   }
 
-  header.appendChild(langLabel)
+  // Function to update run button visibility
+  const updateRunButton = (newLangAlias) => {
+    const newCanRun = isLanguageRunnable(newLangAlias)
+    if (newCanRun && !runBtn) {
+      runBtn = document.createElement('button')
+      runBtn.className = 'code-editor-btn run'
+      runBtn.innerHTML = `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>Run`
+      runBtn.addEventListener('click', (e) => {
+        e.stopPropagation()
+        if (!output) {
+          // Create output area if it doesn't exist
+          output = document.createElement('div')
+          output.className = 'code-editor-output'
+          
+          const outputHeader = document.createElement('div')
+          outputHeader.className = 'code-editor-output-header'
+          
+          const outputLabel = document.createElement('span')
+          outputLabel.textContent = 'Output'
+          
+          const clearBtn = document.createElement('button')
+          clearBtn.className = 'code-editor-output-clear'
+          clearBtn.textContent = 'Clear'
+          clearBtn.addEventListener('click', (e) => {
+            e.stopPropagation()
+            output.style.display = 'none'
+            outputContent.innerHTML = ''
+          })
+          
+          outputHeader.appendChild(outputLabel)
+          outputHeader.appendChild(clearBtn)
+          
+          outputContent = document.createElement('div')
+          outputContent.className = 'code-editor-output-content'
+          
+          output.appendChild(outputHeader)
+          output.appendChild(outputContent)
+          container.appendChild(output)
+        }
+        output.style.display = 'block'
+        outputContent.innerHTML = ''
+        executeCode(textarea.value, currentLangAlias, outputContent)
+      })
+      actions.appendChild(runBtn)
+    } else if (!newCanRun && runBtn) {
+      runBtn.remove()
+      runBtn = null
+      if (output) {
+        output.style.display = 'none'
+      }
+    }
+  }
+
+  // Language change handler
+  langSelect.addEventListener('change', () => {
+    currentLangAlias = langSelect.value
+    
+    // Update syntax highlighting
+    highlight.innerHTML = highlightCode(textarea.value, currentLangAlias)
+    
+    // Update raw data for saving
+    container.dataset.raw = '```' + currentLangAlias + '\n' + textarea.value + '\n```'
+    
+    // Update run button visibility
+    updateRunButton(currentLangAlias)
+    
+    // Trigger save
+    if (saveCallback) saveCallback()
+  })
+
+  header.appendChild(langSelect)
   header.appendChild(actions)
 
   // Code body with textarea for editing
@@ -534,7 +630,7 @@ function createCodeEditor(rawCode, saveCallback) {
     textarea.style.height = textarea.scrollHeight + 'px'
   }
   const updateHighlight = () => {
-    highlight.innerHTML = highlightCode(textarea.value, langAlias)
+    highlight.innerHTML = highlightCode(textarea.value, currentLangAlias)
   }
   textarea.addEventListener('input', () => {
     autoResize()
@@ -557,7 +653,7 @@ function createCodeEditor(rawCode, saveCallback) {
   // Update raw data when code changes (for saving)
   const debouncedSave = saveCallback ? debounce(500, saveCallback) : () => {}
   textarea.addEventListener('input', () => {
-    container.dataset.raw = '```' + langAlias + '\n' + textarea.value + '\n```'
+    container.dataset.raw = '```' + currentLangAlias + '\n' + textarea.value + '\n```'
     debouncedSave()
   })
 
@@ -581,7 +677,7 @@ function createCodeEditor(rawCode, saveCallback) {
       e.stopPropagation()
       output.style.display = 'block'
       outputContent.innerHTML = ''
-      executeCode(textarea.value, langAlias, outputContent)
+      executeCode(textarea.value, currentLangAlias, outputContent)
     })
   }
 

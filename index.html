@@ -256,6 +256,45 @@
     }
   }
 
+  .code-editor-lang-select {
+    font-size: 12px;
+    font-weight: 600;
+    color: #57606a;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    background: transparent;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    padding: 2px 6px;
+    cursor: pointer;
+    outline: none;
+    font-family: system-ui;
+    transition: all 0.15s ease;
+    @media (prefers-color-scheme: dark) {
+      color: #8b949e;
+    }
+  }
+
+  .code-editor-lang-select:hover {
+    background: rgba(0, 0, 0, 0.05);
+    border-color: #d0d7de;
+    @media (prefers-color-scheme: dark) {
+      background: rgba(255, 255, 255, 0.05);
+      border-color: #484f58;
+    }
+  }
+
+  .code-editor-lang-select:focus {
+    border-color: var(--outline);
+    box-shadow: 0 0 0 2px rgba(0, 122, 255, 0.2);
+  }
+
+  .code-editor-lang-select option {
+    text-transform: none;
+    background: var(--elevated);
+    color: var(--text);
+  }
+
   .code-editor-actions {
     display: flex;
     gap: 6px;
