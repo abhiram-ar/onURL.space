@@ -10,6 +10,13 @@
 <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon-16x16.png">
 <link rel="manifest" href="assets/site.webmanifest">
 
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link
+  href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+  rel="stylesheet">
+<link rel="stylesheet"
+  href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0" />
 
 <style>
   * {
@@ -18,23 +25,225 @@
     box-sizing: border-box;
   }
 
+  /* Custom Persistent Scrollbar */
+  ::-webkit-scrollbar {
+    width: 14px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background-color: var(--ce-scrollbar-thumb);
+    border: 4px solid transparent;
+    background-clip: content-box;
+    border-radius: 99px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background-color: var(--text);
+  }
+
+  :root {
+    --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+    --font-mono: 'JetBrains Mono', monospace;
+
+    --bg-light: #f0eee6;
+    --bg-dark: #0d1117;
+
+    --elevated-light: rgba(255, 255, 255, 0.85);
+    --elevated-dark: rgba(22, 27, 34, 0.85);
+    /* #161b22 */
+
+    --text-light: #141413;
+    --text-dark: #FAF9F5;
+
+    --link-light: #0969da;
+    --link-dark: #58a6ff;
+
+    --outline-color: #0969da;
+
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
+    --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.12);
+
+    /* UI Colors - Light */
+    --primary: #d97757;
+    --bg-hover: rgba(0, 0, 0, 0.04);
+    --menu-button-bg: #d1cec7;
+    --toolbar-active-bg: #d1cec7;
+    --toolbar-active-text: #141413;
+
+    /* Code Editor Output - Light */
+    --ce-output-bg: #f6f8fa;
+    --ce-output-text: #24292f;
+    --ce-output-border: #e1e4e8;
+    --ce-output-header-bg: #f1f3f5;
+
+    /* Code Editor Syntex Highlighting - Light */
+    --ce-keyword: #cf222e;
+    --ce-string: #0a3069;
+    --ce-number: #0550ae;
+    --ce-comment: #6e7781;
+    --ce-function: #8250df;
+    --ce-operator: #cf222e;
+    --ce-builtin: #953800;
+    --ce-regex: #116329;
+    --ce-tag: #116329;
+    --ce-selector: #8250df;
+    --ce-variable: #953800;
+    --ce-heading: #0550ae;
+    --ce-link: #0969da;
+    --ce-bg: #fdfcfa;
+    --ce-border: #e1e4e8;
+    --ce-header-bg: #f1f3f5;
+    --ce-scrollbar-track: transparent;
+    --ce-scrollbar-thumb: #d0d7de;
+  }
+
   html {
     color-scheme: light dark;
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
+    font-family: var(--font-sans);
 
-    background-color: #fff;
-    --elevated: #fff;
-    --link: #0066cc;
-    --text: #161616;
-    --outline: #007aff;
+    background-color: var(--bg-light);
+    --elevated: var(--elevated-light);
+    --link: var(--link-light);
+    --text: var(--text-light);
+    --outline: var(--outline-color);
 
+    transition: background-color 0.3s ease, color 0.3s ease;
+    scrollbar-gutter: stable;
+    overflow-y: scroll;
+
+    /* Theme defaults based on system preference */
     @media (prefers-color-scheme: dark) {
-      background-color: #000;
-      --elevated: #121212;
-      --link: #58a6ff;
-      --text: #fff;
+      background-color: var(--bg-dark);
+      --elevated: var(--elevated-dark);
+      --link: var(--link-dark);
+      --text: var(--text-dark);
+
+      /* UI Colors - Dark System Default */
+      --primary: #0f7c11;
+      --bg-hover: #353535;
+      --menu-button-bg: #0969da;
+      --toolbar-active-bg: #0569fa;
+      --toolbar-active-text: #fff;
+
+      /* Code Editor Output - Dark System Default */
+      --ce-output-bg: #161b22;
+      --ce-output-text: #c9d1d9;
+      --ce-output-border: #30363d;
+      --ce-output-header-bg: #21262d;
+
+      /* Code Editor Syntax Highlighting - Dark System Default */
+      --ce-keyword: #ff7b72;
+      --ce-string: #a5d6ff;
+      --ce-number: #79c0ff;
+      --ce-comment: #8b949e;
+      --ce-function: #d2a8ff;
+      --ce-operator: #ff7b72;
+      --ce-builtin: #ffa657;
+      --ce-regex: #7ee787;
+      --ce-tag: #7ee787;
+      --ce-selector: #d2a8ff;
+      --ce-variable: #ffa657;
+      --ce-heading: #79c0ff;
+      --ce-link: #58a6ff;
+      --ce-bg: #161b22;
+      --ce-border: #30363d;
+      --ce-header-bg: #21262d;
+      --ce-scrollbar-thumb: #484f58;
     }
+  }
+
+  /* Manual Theme Overrides */
+  html[data-theme="light"] {
+    background-color: var(--bg-light);
+    --elevated: var(--elevated-light);
+    --link: var(--link-light);
+    --text: var(--text-light);
+    color-scheme: light;
+
+    /* UI Colors - Light Override */
+    --primary: #d97757;
+    --bg-hover: rgba(0, 0, 0, 0.04);
+    --menu-button-bg: #d1cec7;
+    --toolbar-active-bg: #d1cec7;
+    --toolbar-active-text: #141413;
+
+    /* Code Editor Output - Light Override */
+    --ce-output-bg: #f6f8fa;
+    --ce-output-text: #24292f;
+    --ce-output-border: #e1e4e8;
+    --ce-output-header-bg: #f1f3f5;
+
+    /* Code Editor Syntex Highlighting - Light Override */
+    --ce-keyword: #cf222e;
+    --ce-string: #0a3069;
+    --ce-number: #0550ae;
+    --ce-comment: #6e7781;
+    --ce-function: #8250df;
+    --ce-operator: #cf222e;
+    --ce-builtin: #953800;
+    --ce-regex: #116329;
+    --ce-tag: #116329;
+    --ce-selector: #8250df;
+    --ce-variable: #953800;
+    --ce-heading: #0a4991;
+    --ce-link: #0969da;
+    --ce-bg: #fdfcfa;
+    --ce-border: #e1e4e8;
+    --ce-header-bg: #f1f3f5;
+    --ce-scrollbar-thumb: #d0d7de;
+  }
+
+  html[data-theme="dark"] {
+    background-color: var(--bg-dark);
+    --elevated: var(--elevated-dark);
+    --link: var(--link-dark);
+    --text: var(--text-dark);
+    color-scheme: dark;
+
+    /* UI Colors - Dark Override */
+    --primary: #0f7c11;
+    --bg-hover: #353535;
+    --menu-button-bg: #0969da;
+    --toolbar-active-bg: #0569fa;
+    --toolbar-active-text: #fff;
+
+    /* Code Editor Output - Dark Override */
+    --ce-output-bg: #161b22;
+    --ce-output-text: #c9d1d9;
+    --ce-output-border: #30363d;
+    --ce-output-header-bg: #21262d;
+
+    /* Code Editor Syntax Highlighting - Dark Override */
+    --ce-keyword: #ff7b72;
+    --ce-string: #a5d6ff;
+    --ce-number: #79c0ff;
+    --ce-comment: #8b949e;
+    --ce-function: #d2a8ff;
+    --ce-operator: #ff7b72;
+    --ce-builtin: #ffa657;
+    --ce-regex: #7ee787;
+    --ce-tag: #7ee787;
+    --ce-selector: #d2a8ff;
+    --ce-variable: #ffa657;
+    --ce-heading: #79c0ff;
+    --ce-link: #58a6ff;
+    --ce-bg: #161b22;
+    --ce-border: #30363d;
+    --ce-header-bg: #21262d;
+    --ce-scrollbar-thumb: #484f58;
+  }
+
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation: none;
+    mix-blend-mode: normal;
   }
 
   body {
@@ -50,14 +259,71 @@
 
   article {
     outline: none;
-    padding: 18px max(18px, calc(50vw - 400px));
+    padding: 32px max(24px, calc(50vw - 400px));
     width: 100%;
     min-height: 100dvh;
-    font: 18px / 1.5 system-ui;
+    font-family: var(--font-sans);
+    font-size: 17px;
+    line-height: 1.6;
     tab-size: 4;
     white-space: pre-wrap;
     text-wrap-style: stable;
     overflow-wrap: break-word;
+    animation: fadeIn 0.4s ease-out;
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes slideDown {
+    from {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes scaleIn {
+    from {
+      opacity: 0;
+      transform: scale(0.95);
+    }
+
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+
+  /* Typography enhancements */
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    margin-top: 1.5em;
+    margin-bottom: 0.5em;
+    line-height: 1.25;
+  }
+
+  p,
+  ul,
+  ol {
+    margin-bottom: 1em;
   }
 
   .md-h1,
@@ -94,11 +360,20 @@
   }
 
   .md-code {
-    font-family: monospace;
+    font-family: var(--font-mono);
+    background-color: var(--ce-bg);
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 0.9em;
+  }
+
+  .md-backtick {
+    font-family: var(--font-mono);
+    font-size: 0.9em;
   }
 
   .md-codeblock {
-    font-family: monospace;
+    font-family: var(--font-mono);
   }
 
   .md-bold {
@@ -119,88 +394,52 @@
 
   /* Code Editor syntax highlighting (extensible for all languages) */
   .ce-keyword {
-    color: #cf222e;
-    @media (prefers-color-scheme: dark) {
-      color: #ff7b72;
-    }
+    color: var(--ce-keyword);
   }
 
   .ce-string {
-    color: #0a3069;
-    @media (prefers-color-scheme: dark) {
-      color: #a5d6ff;
-    }
+    color: var(--ce-string);
   }
 
   .ce-number {
-    color: #0550ae;
-    @media (prefers-color-scheme: dark) {
-      color: #79c0ff;
-    }
+    color: var(--ce-number);
   }
 
   .ce-comment {
-    color: #6e7781;
-    @media (prefers-color-scheme: dark) {
-      color: #8b949e;
-    }
+    color: var(--ce-comment);
   }
 
   .ce-function {
-    color: #8250df;
-    @media (prefers-color-scheme: dark) {
-      color: #d2a8ff;
-    }
+    color: var(--ce-function);
   }
 
   .ce-operator {
-    color: #cf222e;
-    @media (prefers-color-scheme: dark) {
-      color: #ff7b72;
-    }
+    color: var(--ce-operator);
   }
 
   .ce-builtin {
-    color: #953800;
-    @media (prefers-color-scheme: dark) {
-      color: #ffa657;
-    }
+    color: var(--ce-builtin);
   }
 
   .ce-regex {
-    color: #116329;
-    @media (prefers-color-scheme: dark) {
-      color: #7ee787;
-    }
+    color: var(--ce-regex);
   }
 
   .ce-tag {
-    color: #116329;
-    @media (prefers-color-scheme: dark) {
-      color: #7ee787;
-    }
+    color: var(--ce-tag);
   }
 
   .ce-selector {
-    color: #8250df;
-    @media (prefers-color-scheme: dark) {
-      color: #d2a8ff;
-    }
+    color: var(--ce-selector);
   }
 
   .ce-variable {
-    color: #953800;
-    @media (prefers-color-scheme: dark) {
-      color: #ffa657;
-    }
+    color: var(--ce-variable);
   }
 
   .ce-heading {
     font-weight: bold;
-    color: #0550ae;
-    @media (prefers-color-scheme: dark) {
-      color: #79c0ff;
-    }
+    color: var(--ce-heading);
   }
 
   .ce-code {
@@ -218,10 +457,7 @@
   }
 
   .ce-link {
-    color: #0969da;
-    @media (prefers-color-scheme: dark) {
-      color: #58a6ff;
-    }
+    color: var(--ce-link);
   }
 
   /* Interactive Code Editor */
@@ -230,12 +466,8 @@
     margin: 12px 0;
     border-radius: 8px;
     overflow: hidden;
-    border: 1px solid #e1e4e8;
-    background: #f6f8fa;
-    @media (prefers-color-scheme: dark) {
-      border-color: #30363d;
-      background: #161b22;
-    }
+    border: 1px solid var(--ce-border);
+    background: var(--ce-bg);
   }
 
   .code-editor-header {
@@ -243,12 +475,10 @@
     align-items: center;
     justify-content: space-between;
     padding: 8px 12px;
-    background: #f1f3f5;
-    border-bottom: 1px solid #e1e4e8;
-    @media (prefers-color-scheme: dark) {
-      background: #21262d;
-      border-color: #30363d;
-    }
+    background: var(--ce-header-bg);
+    border-bottom: 1px solid var(--ce-border);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
   }
 
   .code-editor-lang {
@@ -257,6 +487,7 @@
     color: #57606a;
     text-transform: uppercase;
     letter-spacing: 0.5px;
+
     @media (prefers-color-scheme: dark) {
       color: #8b949e;
     }
@@ -269,24 +500,30 @@
     text-transform: uppercase;
     letter-spacing: 0.5px;
     background: transparent;
-    border: 1px solid transparent;
-    border-radius: 4px;
-    padding: 2px 6px;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    border-radius: 6px;
+    padding: 4px 8px;
     cursor: pointer;
     outline: none;
-    font-family: system-ui;
-    transition: all 0.15s ease;
+    font-family: var(--font-sans);
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    background: var(--elevated);
+    box-shadow: var(--shadow-sm);
+
     @media (prefers-color-scheme: dark) {
-      color: #8b949e;
+      color: #c9d1d9;
+      border-color: rgba(255, 255, 255, 0.1);
     }
   }
 
   .code-editor-lang-select:hover {
-    background: rgba(0, 0, 0, 0.05);
-    border-color: #d0d7de;
+    background: var(--elevated);
+    border-color: var(--outline);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
+
     @media (prefers-color-scheme: dark) {
-      background: rgba(255, 255, 255, 0.05);
-      border-color: #484f58;
+      border-color: var(--outline);
     }
   }
 
@@ -316,33 +553,41 @@
     border: none;
     border-radius: 6px;
     cursor: pointer;
-    transition: all 0.15s ease;
-    font-family: system-ui;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    font-family: var(--font-sans);
+    box-shadow: var(--shadow-sm);
   }
 
   .code-editor-btn.copy {
-    background: #e1e4e8;
+    background: #ffffff;
+    border: 1px solid rgba(0, 0, 0, 0.1);
     color: #24292f;
+
     @media (prefers-color-scheme: dark) {
-      background: #30363d;
+      background: #2d333b;
+      border-color: rgba(255, 255, 255, 0.1);
       color: #c9d1d9;
     }
   }
 
   .code-editor-btn.copy:hover {
-    background: #d0d7de;
+    background: #f6f8fa;
+    box-shadow: var(--shadow-md);
+
     @media (prefers-color-scheme: dark) {
-      background: #484f58;
+      background: #30363d;
     }
   }
 
   .code-editor-btn.run {
-    background: #238636;
+    background: var(--primary);
     color: #fff;
+    box-shadow: 0 1px 3px rgba(31, 136, 61, 0.2);
   }
 
   .code-editor-btn.run:hover {
-    background: #2ea043;
+    filter: brightness(1.1);
+    box-shadow: 0 4px 8px rgba(31, 136, 61, 0.3);
   }
 
   .code-editor-btn svg {
@@ -360,7 +605,7 @@
     min-height: 80px;
     padding: 12px;
     margin: 0;
-    font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;
+    font-family: var(--font-mono);
     font-size: 14px;
     line-height: 1.5;
     tab-size: 2;
@@ -384,7 +629,7 @@
     bottom: 0;
     padding: 12px;
     margin: 0;
-    font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;
+    font-family: var(--font-mono);
     font-size: 14px;
     line-height: 1.5;
     tab-size: 2;
@@ -395,12 +640,9 @@
   }
 
   .code-editor-output {
-    border-top: 1px solid #e1e4e8;
-    background: #1b1f23;
-    color: #c9d1d9;
-    @media (prefers-color-scheme: dark) {
-      border-color: #30363d;
-    }
+    border-top: 1px solid var(--ce-output-border);
+    background: var(--ce-output-bg);
+    color: var(--ce-output-text);
   }
 
   .code-editor-output-header {
@@ -412,8 +654,9 @@
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.5px;
-    color: #8b949e;
-    background: #161b22;
+    color: var(--ce-output-text);
+    background: var(--ce-output-header-bg);
+    opacity: 0.8;
   }
 
   .code-editor-output-clear {
@@ -433,7 +676,7 @@
 
   .code-editor-output-content {
     padding: 10px 12px;
-    font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;
+    font-family: var(--font-mono);
     font-size: 13px;
     line-height: 1.5;
     max-height: 200px;
@@ -448,10 +691,21 @@
     font-style: italic;
   }
 
-  .code-editor-output-content .log { color: #c9d1d9; }
-  .code-editor-output-content .error { color: #f85149; }
-  .code-editor-output-content .warn { color: #d29922; }
-  .code-editor-output-content .info { color: #58a6ff; }
+  .code-editor-output-content .log {
+    color: #c9d1d9;
+  }
+
+  .code-editor-output-content .error {
+    color: #f85149;
+  }
+
+  .code-editor-output-content .warn {
+    color: #d29922;
+  }
+
+  .code-editor-output-content .info {
+    color: #58a6ff;
+  }
 
   #toolbar {
     position: fixed;
@@ -483,16 +737,26 @@
     touch-action: manipulation;
     transition: background-color .2s ease-out, box-shadow .2s ease-out;
     user-select: none;
+
+    /* Glassmorphism */
+    background: var(--elevated);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(0, 0, 0, 0.06);
   }
 
   @media (hover) {
     .toolbar-btn:hover {
-      background-color: rgba(5, 105, 250, 0.1);
-      box-shadow: 0 3px 12px rgba(0, 0, 0, 0.15);
+      background-color: rgba(0, 0, 0, 0.08);
     }
+
     @media (prefers-color-scheme: dark) {
+      .toolbar-btn {
+        border-color: rgba(255, 255, 255, 0.1);
+      }
+
       .toolbar-btn:hover {
-        background-color: #353535;
+        background-color: rgba(255, 255, 255, 0.15);
       }
     }
   }
@@ -503,13 +767,13 @@
   }
 
   .toolbar-btn.active {
-    background-color: #0569fa;
-    color: #fff;
+    background-color: var(--toolbar-active-bg);
+    color: var(--toolbar-active-text);
   }
 
   @media (hover) {
     .toolbar-btn.active:hover {
-      background-color: #3c86f3;
+      filter: brightness(0.9);
     }
   }
 
@@ -521,11 +785,11 @@
 
   #button {
     -webkit-tap-highlight-color: transparent;
-    background-color: #0569fa;
+    background-color: var(--menu-button-bg);
     border-radius: 8px;
     border: none;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-    color: #fff;
+    box-shadow: 0 2px 8px rgba(9, 105, 218, 0.25);
+    color: var(--text-light);
     cursor: pointer;
     display: grid;
     font-weight: 600;
@@ -543,9 +807,7 @@
 
   @media (hover) {
     #button:hover {
-      color: #fff;
-      background-color: #3c86f3;
-      box-shadow: 0 3px 12px rgba(0, 0, 0, 0.2);
+      filter: brightness(0.9);
     }
   }
 
@@ -571,11 +833,17 @@
     position: fixed;
     right: 12px;
     top: 56px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12), 0 5px 10px rgba(0, 0, 0, 0.08);
+    box-shadow: var(--shadow-lg);
     background: var(--elevated);
-    backdrop-filter: blur(10px);
-    border-radius: 10px;
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border-radius: 12px;
+    border: 1px solid rgba(0, 0, 0, 0.08);
     z-index: 3;
+
+    @media (prefers-color-scheme: dark) {
+      border-color: rgba(255, 255, 255, 0.1);
+    }
   }
 
   #menu.visible {
@@ -603,10 +871,7 @@
   }
 
   #menu .item:hover {
-    background-color: rgba(0, 0, 0, 0.04);
-    @media (prefers-color-scheme: dark) {
-      background-color: #353535;
-    }
+    background-color: var(--bg-hover);
   }
 
   #menu .item:focus-within {
@@ -645,6 +910,7 @@
     z-index: 10;
     padding: 12px 16px;
     border: 1px solid rgba(0, 0, 0, 0.08);
+
     @media (prefers-color-scheme: dark) {
       border-color: rgba(255, 255, 255, 0.1);
       box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
@@ -667,6 +933,7 @@
     background: #dcfce7;
     color: #166534;
     border-color: #bbf7d0;
+
     @media (prefers-color-scheme: dark) {
       background: #14532d;
       color: #bbf7d0;
@@ -679,14 +946,106 @@
       visibility: hidden !important;
     }
   }
+
+  #placeholder {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    padding: 32px max(24px, calc(50vw - 400px));
+    font-family: var(--font-sans);
+    font-size: 17px;
+    line-height: 1.6;
+    color: var(--text);
+    opacity: 0.5;
+    pointer-events: none;
+    user-select: none;
+    z-index: 0;
+    display: none;
+  }
+
+  #placeholder.visible {
+    display: block;
+  }
+
+  #placeholder h1 {
+    font-size: 2em;
+    font-weight: 700;
+    margin-bottom: 0.5em;
+  }
+
+  #placeholder h2 {
+    font-size: 1.25em;
+    font-weight: 600;
+    margin-top: 1.5em;
+    margin-bottom: 0.5em;
+  }
+
+  #placeholder ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  #placeholder li {
+    margin-bottom: 0.5em;
+  }
+
+  #placeholder code {
+    font-family: var(--font-mono);
+    background-color: var(--ce-bg);
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 0.9em;
+  }
 </style>
 <article contenteditable="plaintext-only" spellcheck autofocus></article>
+<div id="placeholder">
+  <h1>Welcome to space onURL <span style="font-weight: 100;"> (⌐■_■) </span></h1>
+  <p>A minimalist text editor that lives entirely in your browser and stores everything in the URL.</p>
+  <h2>Features</h2>
+  <ul>
+    <li>&gt;&lt; <strong>Compression</strong> - Your text gets compressed and stored in the URL</li>
+    <li>&lt;-&gt; <strong>Easy Sharing</strong> - Share your notes by copying a URL or QR code</li>
+    <li>{..} <strong>Code</strong> - Code blocks with syntax highlighting & code execution</li>
+    <li>^_^ <strong>Continue where you left off</strong> - Your text gets saved automatically</li>
+  </ul>
+
+  <h2>Pro tips</h2>
+  <ul>
+    <li>( ! ) <strong>Custom Title</strong> - Start with <code># Title</code> to set the page title</li>
+    <li>
+      &lt;/&gt; <strong>Raw view</strong> - Switch to raw view to see the markdown source and edit it directly
+    </li>
+  </ul>
+
+
+</div>
 <div id="toolbar" class="noprint">
   <a class="toolbar-btn" href="#new" target="_blank" title="New document">
     <svg aria-hidden="true" focusable="false">
       <use xlink:href="#icon-plus"></use>
     </svg>
   </a>
+  <svg display="none">
+    <symbol id="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+      stroke-linejoin="round">
+      <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+    </symbol>
+    <symbol id="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+      stroke-linejoin="round">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </symbol>
+  </svg>
   <button class="toolbar-btn" id="copy-url" title="Copy URL">
     <svg aria-hidden="true" focusable="false">
       <use xlink:href="#icon-copy"></use>
@@ -697,9 +1056,14 @@
       <use xlink:href="#icon-code"></use>
     </svg>
   </button>
+  <button class="toolbar-btn" id="toggle-theme" title="Toggle theme">
+    <svg aria-hidden="true" focusable="false" id="theme-icon">
+      <use xlink:href="#icon-moon"></use>
+    </svg>
+  </button>
   <button id="button" title="More options">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
-         stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+      stroke-linejoin="round">
       <circle cx="12" cy="12" r="1"></circle>
       <circle cx="12" cy="5" r="1"></circle>
       <circle cx="12" cy="19" r="1"></circle>
@@ -741,19 +1105,105 @@
 <div id="notification" class="noprint"></div>
 <script>
   let isRawMode = false
-  
+
+  // Initialize theme
+  const getStoredTheme = () => localStorage.getItem('theme')
+  const setStoredTheme = theme => localStorage.setItem('theme', theme)
+
+  const getPreferredTheme = () => {
+    const storedTheme = getStoredTheme()
+    if (storedTheme) return storedTheme
+    return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+  }
+
+  const setTheme = (theme) => {
+    if (theme === 'auto') {
+      document.documentElement.removeAttribute('data-theme')
+    } else {
+      document.documentElement.setAttribute('data-theme', theme)
+    }
+    updateThemeIcon(theme === 'dark' || (theme === 'auto' && window.matchMedia('(prefers-color-scheme: dark)').matches))
+  }
+
+  const updateThemeIcon = (isDark) => {
+    const icon = document.querySelector('#theme-icon use')
+    icon.setAttribute('xlink:href', isDark ? '#icon-sun' : '#icon-moon')
+  }
+
+  setTheme(getPreferredTheme())
+
+  document.getElementById('toggle-theme').addEventListener('click', () => {
+    const currentTheme = getPreferredTheme()
+    const newTheme = currentTheme === 'light' ? 'dark' : 'light'
+
+    setStoredTheme(newTheme)
+
+    if (!document.startViewTransition) {
+      setTheme(newTheme)
+      return
+    }
+
+    const transition = document.startViewTransition(() => {
+      setTheme(newTheme)
+    })
+
+    transition.ready.then(() => {
+      const { clientX, clientY } = window.event || { clientX: 0, clientY: 0 } // Fallback if no event
+
+      // Get the button position
+      const btn = document.getElementById('toggle-theme');
+      const rect = btn.getBoundingClientRect();
+      const x = rect.left + rect.width / 2;
+      const y = rect.top + rect.height / 2;
+
+      // Calculate the distance to the furthest corner
+      const endRadius = Math.hypot(
+        Math.max(x, window.innerWidth - x),
+        Math.max(y, window.innerHeight - y)
+      );
+
+      document.documentElement.animate(
+        {
+          clipPath: [
+            `circle(0px at ${x}px ${y}px)`,
+            `circle(${endRadius}px at ${x}px ${y}px)`
+          ],
+        },
+        {
+          duration: 500,
+          easing: "ease-out",
+          pseudoElement: "::view-transition-new(root)",
+        }
+      );
+    });
+  })
+
   initUI()
 
   const article = document.querySelector('article')
+  const placeholder = document.getElementById('placeholder')
   const editor = new Editor(article, parseMarkdown)
-  article.addEventListener('input', debounce(500, save))
+
+  function updatePlaceholder() {
+    // Check innerHTML to detect any content including rendered elements like code blocks
+    if (article.innerHTML.trim().length > 0) {
+      placeholder.classList.remove('visible')
+    } else {
+      placeholder.classList.add('visible')
+    }
+  }
+
+  article.addEventListener('input', () => {
+    updatePlaceholder()
+    debounce(500, save)()
+  })
   article.addEventListener('blur', save)
   article.addEventListener('click', event => {
     if (event.target.tagName === 'A') window.open(event.target.getAttribute('href'), '_blank')
   })
   addEventListener('DOMContentLoaded', load)
   addEventListener('hashchange', load)
-  addEventListener('load', () => new MutationObserver(save).observe(article, {attributeFilter: ['style']}))
+  addEventListener('load', () => new MutationObserver(save).observe(article, { attributeFilter: ['style'] }))
   addEventListener('keydown', e => {
     if ((e.metaKey || e.ctrlKey) && e.code === 'KeyS') {
       e.preventDefault()
@@ -778,6 +1228,7 @@
       article.removeAttribute('style')
     }
     updateTitle()
+    updatePlaceholder()
   }
 
   async function save() {
@@ -808,7 +1259,7 @@
     const walk = (node) => {
       if (node.nodeType === Node.TEXT_NODE) {
         content += node.textContent
-      } else if (node.classList?.contains('code-editor')) {
+      } else if (node.classList?.contains('code-editor') || node.classList?.contains('code-editor-placeholder')) {
         content += node.dataset.raw || ''
       } else if (node.childNodes) {
         node.childNodes.forEach(walk)
@@ -831,11 +1282,11 @@
     writer.write(byteArray)
     writer.close()
     const buffer = await new Response(stream.readable).arrayBuffer()
-    return new Uint8Array(buffer).toBase64({alphabet: 'base64url'})
+    return new Uint8Array(buffer).toBase64({ alphabet: 'base64url' })
   }
 
   async function decompress(b64) {
-    const byteArray = Uint8Array.fromBase64(b64, {alphabet: 'base64url'})
+    const byteArray = Uint8Array.fromBase64(b64, { alphabet: 'base64url' })
     const stream = new DecompressionStream('deflate-raw')
     const writer = stream.writable.getWriter()
     writer.write(byteArray)
@@ -866,7 +1317,7 @@
           suggestedName: document.title + '.html',
           types: [{
             description: 'HTML file',
-            accept: {'text/html': ['.html']},
+            accept: { 'text/html': ['.html'] },
           }],
         })
         const writable = await handle.createWritable()
@@ -878,7 +1329,7 @@
       }
     }
 
-    const blob = new Blob([html], {type: 'text/html'})
+    const blob = new Blob([html], { type: 'text/html' })
     const url = URL.createObjectURL(blob)
     const a = document.createElement('a')
     a.href = url
@@ -897,7 +1348,7 @@
           suggestedName: document.title + '.txt',
           types: [{
             description: 'TEXT file',
-            accept: {'text/plain': ['.txt']},
+            accept: { 'text/plain': ['.txt'] },
           }],
         })
         const writable = await handle.createWritable()
@@ -909,7 +1360,7 @@
       }
     }
 
-    const blob = new Blob([text], {type: 'text/plain'})
+    const blob = new Blob([text], { type: 'text/plain' })
     const url = URL.createObjectURL(blob)
     const a = document.createElement('a')
     a.href = url
@@ -952,7 +1403,7 @@
     if (isRawMode) {
       return
     }
-    
+
     const input = getArticleContent()
     const frag = document.createDocumentFragment()
     const codeBlockPlaceholders = [] // Track code blocks for async loading
@@ -981,24 +1432,25 @@
         walk(article)
         cursorPos = offset
       }
-    } catch (e) {}
+    } catch (e) { }
 
     const matchers = [
-      {name: 'md-codeblock', re: /```[^\n]*\n[\s\S]*?\n```/y},
-      {name: 'md-codeblock', re: /~~~[^\n]*\n[\s\S]*?\n~~~/y},
-      {name: 'md-h1', re: /^#[ \t]+[^\n]*$/my},
-      {name: 'md-h2', re: /^##[ \t]+[^\n]*$/my},
-      {name: 'md-h3', re: /^###[ \t]+[^\n]*$/my},
-      {name: 'md-h4', re: /^####[ \t]+[^\n]*$/my},
-      {name: 'md-h5', re: /^#####[ \t]+[^\n]*$/my},
-      {name: 'md-h6', re: /^######[ \t]+[^\n]*$/my},
-      {name: 'md-code', re: /`[^`\n]*`/y},
-      {name: 'md-bold', re: /\*\*[^*\n]+?\*\*/y},
-      {name: 'md-bold', re: /__[^_\n]+?__/y},
-      {name: 'md-strike', re: /~~[^~\n]+?~~/y},
-      {name: 'md-italic', re: /\*[^*\n]+?\*/y},
-      {name: 'md-italic', re: /_[^_\n]+?_/y},
-      {name: 'md-url', re: /https?:\/\/[^\s<>()\[\]{}"'`]+/y},
+      { name: 'md-codeblock', re: /```[^\n]*\n[\s\S]*?\n```/y },
+      { name: 'md-codeblock', re: /~~~[^\n]*\n[\s\S]*?\n~~~/y },
+      { name: 'md-h1', re: /^#[ \t]+[^\n]*$/my },
+      { name: 'md-h2', re: /^##[ \t]+[^\n]*$/my },
+      { name: 'md-h3', re: /^###[ \t]+[^\n]*$/my },
+      { name: 'md-h4', re: /^####[ \t]+[^\n]*$/my },
+      { name: 'md-h5', re: /^#####[ \t]+[^\n]*$/my },
+      { name: 'md-h6', re: /^######[ \t]+[^\n]*$/my },
+      { name: 'md-code', re: /`[^`\n]+`/y },
+      { name: 'md-backtick', re: /`+/y },
+      { name: 'md-bold', re: /\*\*[^*\n]+?\*\*/y },
+      { name: 'md-bold', re: /__[^_\n]+?__/y },
+      { name: 'md-strike', re: /~~[^~\n]+?~~/y },
+      { name: 'md-italic', re: /\*[^*\n]+?\*/y },
+      { name: 'md-italic', re: /_[^_\n]+?_/y },
+      { name: 'md-url', re: /https?:\/\/[^\s<>()\[\]{}"'`]+/y },
     ]
 
     const specials = ['`', '~', '*', '#', '_', 'h']
@@ -1073,7 +1525,7 @@
           if (placeholder.parentNode) {
             const editor = window.CodeEditor.create(raw, save)
             placeholder.parentNode.replaceChild(editor, placeholder)
-            
+
             // Check if cursor was inside this code block
             if (cursorPos !== null && cursorPos >= startPos && cursorPos <= endPos) {
               focusedEditor = editor
@@ -1083,10 +1535,10 @@
                 const codeStart = firstNewline + 1
                 const closingFence = raw.lastIndexOf('\n```')
                 const codeEnd = closingFence > 0 ? closingFence : raw.length - 3
-                
+
                 // Calculate position within the code content (not the raw markdown)
                 const relativePos = cursorPos - startPos
-                
+
                 // Adjust position to be within the code body
                 let posInCode = 0
                 if (relativePos <= codeStart) {
@@ -1099,7 +1551,7 @@
                   // Cursor was in the code body
                   posInCode = Math.min(relativePos - codeStart, textarea.value.length)
                 }
-                
+
                 // Focus and set cursor position
                 setTimeout(() => {
                   textarea.focus()
@@ -1165,7 +1617,7 @@
     function toggleRawMode() {
       isRawMode = !isRawMode
       toggleRawBtn.classList.toggle('active', isRawMode)
-      
+
       if (isRawMode) {
         // Switch to raw mode - show plain text
         const content = getArticleContent()
@@ -1191,12 +1643,12 @@
       const icon = copyUrlBtn.querySelector('use')
       const originalHref = icon.getAttribute('xlink:href')
       icon.setAttribute('xlink:href', '#icon-check')
-      
+
       // Revert back after 2 seconds
       setTimeout(() => {
         icon.setAttribute('xlink:href', originalHref)
       }, 2000)
-      
+
       copyURL()
     })
 
@@ -1210,17 +1662,17 @@
 
     shareLink.addEventListener('click', event => {
       event.preventDefault()
-      
+
       // Animate the icon to checkmark
       const icon = shareLink.querySelector('use')
       const originalHref = icon.getAttribute('xlink:href')
       icon.setAttribute('xlink:href', '#icon-check')
-      
+
       // Revert back after 2 seconds
       setTimeout(() => {
         icon.setAttribute('xlink:href', originalHref)
       }, 2000)
-      
+
       copyURL()
       hideMenu()
     })
@@ -1304,8 +1756,8 @@
 
     function save() {
       const s = getSelection()
-      const pos = {start: 0, end: 0, dir: undefined}
-      let {anchorNode, anchorOffset, focusNode, focusOffset} = s
+      const pos = { start: 0, end: 0, dir: undefined }
+      let { anchorNode, anchorOffset, focusNode, focusOffset } = s
       if (!anchorNode || !focusNode) throw 'error1'
       if (anchorNode === element && focusNode === element) {
         pos.start = (anchorOffset > 0 && element.textContent) ? element.textContent.length : 0
@@ -1372,7 +1824,7 @@
       if (pos.end < 0) pos.end = 0
 
       if (pos.dir === '<-') {
-        const {start, end} = pos
+        const { start, end } = pos
         pos.start = end
         pos.end = start
       }
@@ -1481,7 +1933,7 @@
         && lastRecord.pos.end === pos.end
       ) return
       at++
-      history[at] = {html, pos}
+      history[at] = { html, pos }
       history.splice(at + 1)
       const maxHistory = 10_000
       if (at > maxHistory) {
@@ -1538,66 +1990,65 @@
   }
 </script>
 <svg style="display: none" aria-hidden="true" focusable="false">
-  <symbol id="icon-plus" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-          stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"
-          class="icon icon-tabler icons-tabler-outline icon-tabler-plus">
-    <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-    <path d="M12 5l0 14"/>
-    <path d="M5 12l14 0"/>
+  <symbol id="icon-plus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25"
+    stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-plus">
+    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+    <path d="M12 5l0 14" />
+    <path d="M5 12l14 0" />
   </symbol>
   <symbol id="icon-share" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25"
-          stroke-linecap="round"
-          stroke-linejoin="round">
-    <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-    <path d="M8 9h-1a2 2 0 0 0 -2 2v8a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-8a2 2 0 0 0 -2 -2h-1"/>
-    <path d="M12 14v-11"/>
-    <path d="M9 6l3 -3l3 3"/>
+    stroke-linecap="round" stroke-linejoin="round">
+    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+    <path d="M8 9h-1a2 2 0 0 0 -2 2v8a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-8a2 2 0 0 0 -2 -2h-1" />
+    <path d="M12 14v-11" />
+    <path d="M9 6l3 -3l3 3" />
   </symbol>
-  <symbol id="icon-qrcode" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-          stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round">
-    <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-    <path d="M4 5a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v4a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1l0 -4"/>
-    <path d="M7 17l0 .01"/>
-    <path d="M14 5a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v4a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1l0 -4"/>
-    <path d="M7 7l0 .01"/>
-    <path d="M4 15a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v4a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1l0 -4"/>
-    <path d="M17 7l0 .01"/>
-    <path d="M14 14l3 0"/>
-    <path d="M20 14l0 .01"/>
-    <path d="M14 14l0 3"/>
-    <path d="M14 20l3 0"/>
-    <path d="M17 17l3 0"/>
-    <path d="M20 17l0 3"/>
+  <symbol id="icon-qrcode" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25"
+    stroke-linecap="round" stroke-linejoin="round">
+    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+    <path d="M4 5a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v4a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1l0 -4" />
+    <path d="M7 17l0 .01" />
+    <path d="M14 5a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v4a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1l0 -4" />
+    <path d="M7 7l0 .01" />
+    <path d="M4 15a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v4a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1l0 -4" />
+    <path d="M17 7l0 .01" />
+    <path d="M14 14l3 0" />
+    <path d="M20 14l0 .01" />
+    <path d="M14 14l0 3" />
+    <path d="M14 20l3 0" />
+    <path d="M17 17l3 0" />
+    <path d="M20 17l0 3" />
   </symbol>
-  <symbol id="icon-github" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-          stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round">
-    <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <symbol id="icon-github" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25"
+    stroke-linecap="round" stroke-linejoin="round">
+    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
     <path
-      d="M9 19c-4.3 1.4 -4.3 -2.5 -6 -3m12 5v-3.5c0 -1 .1 -1.4 -.5 -2c2.8 -.3 5.5 -1.4 5.5 -6a4.6 4.6 0 0 0 -1.3 -3.2a4.2 4.2 0 0 0 -.1 -3.2s-1.1 -.3 -3.5 1.3a12.3 12.3 0 0 0 -6.2 0c-2.4 -1.6 -3.5 -1.3 -3.5 -1.3a4.2 4.2 0 0 0 -.1 3.2a4.6 4.6 0 0 0 -1.3 3.2c0 4.6 2.7 5.7 5.5 6c-.6 .6 -.6 1.2 -.5 2v3.5"/>
+      d="M9 19c-4.3 1.4 -4.3 -2.5 -6 -3m12 5v-3.5c0 -1 .1 -1.4 -.5 -2c2.8 -.3 5.5 -1.4 5.5 -6a4.6 4.6 0 0 0 -1.3 -3.2a4.2 4.2 0 0 0 -.1 -3.2s-1.1 -.3 -3.5 1.3a12.3 12.3 0 0 0 -6.2 0c-2.4 -1.6 -3.5 -1.3 -3.5 -1.3a4.2 4.2 0 0 0 -.1 3.2a4.6 4.6 0 0 0 -1.3 3.2c0 4.6 2.7 5.7 5.5 6c-.6 .6 -.6 1.2 -.5 2v3.5" />
   </symbol>
-  <symbol id="icon-copy" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-          stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round">
-    <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-    <path d="M7 7m0 2.667a2.667 2.667 0 0 1 2.667 -2.667h8.666a2.667 2.667 0 0 1 2.667 2.667v8.666a2.667 2.667 0 0 1 -2.667 2.667h-8.666a2.667 2.667 0 0 1 -2.667 -2.667z"/>
-    <path d="M4.012 16.737a2.005 2.005 0 0 1 -1.012 -1.737v-10c0 -1.1 .9 -2 2 -2h10c.75 0 1.158 .385 1.5 1"/>
+  <symbol id="icon-copy" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25"
+    stroke-linecap="round" stroke-linejoin="round">
+    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+    <path
+      d="M7 7m0 2.667a2.667 2.667 0 0 1 2.667 -2.667h8.666a2.667 2.667 0 0 1 2.667 2.667v8.666a2.667 2.667 0 0 1 -2.667 2.667h-8.666a2.667 2.667 0 0 1 -2.667 -2.667z" />
+    <path d="M4.012 16.737a2.005 2.005 0 0 1 -1.012 -1.737v-10c0 -1.1 .9 -2 2 -2h10c.75 0 1.158 .385 1.5 1" />
   </symbol>
-  <symbol id="icon-download" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-          stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round">
-    <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-    <path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2 -2v-2"/>
-    <path d="M7 11l5 5l5 -5"/>
-    <path d="M12 4l0 12"/>
+  <symbol id="icon-download" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25"
+    stroke-linecap="round" stroke-linejoin="round">
+    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+    <path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2 -2v-2" />
+    <path d="M7 11l5 5l5 -5" />
+    <path d="M12 4l0 12" />
   </symbol>
-  <symbol id="icon-code" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-          stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round">
-    <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-    <path d="M7 8l-4 4l4 4"/>
-    <path d="M17 8l4 4l-4 4"/>
-    <path d="M14 4l-4 16"/>
+  <symbol id="icon-code" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25"
+    stroke-linecap="round" stroke-linejoin="round">
+    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+    <path d="M7 8l-4 4l4 4" />
+    <path d="M17 8l4 4l-4 4" />
+    <path d="M14 4l-4 16" />
   </symbol>
-  <symbol id="icon-check" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-          stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-    <polyline points="20 6 9 17 4 12"/>
+  <symbol id="icon-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+    stroke-linejoin="round">
+    <polyline points="20 6 9 17 4 12" />
   </symbol>
   <symbol id="icon-empty" viewBox="0 0 24 24"></symbol>
 </svg>
