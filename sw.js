@@ -1,4 +1,4 @@
-const CACHE_NAME = 'textarea-2026-02-01-v6'
+const CACHE_NAME = 'textarea-2026-02-01-v7'
 const ASSETS = [
   '/',
   '/qr',
