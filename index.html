@@ -975,23 +975,37 @@
             const editor = window.CodeEditor.create(raw, save)
             placeholder.parentNode.replaceChild(editor, placeholder)
             
+            // Check if cursor was inside this code block
             if (cursorPos !== null && cursorPos >= startPos && cursorPos <= endPos) {
               focusedEditor = editor
-              const firstNewline = raw.indexOf('\n')
-              const codeStart = firstNewline + 1
-              const codeEnd = raw.length - 4 
-              const relativePos = cursorPos - startPos
-              
-              if (relativePos > codeStart && relativePos < raw.length) {
-                const textarea = editor.querySelector('.code-editor-textarea')
-                if (textarea) {
-                  const codeBody = raw.slice(codeStart, codeEnd).trim()
-                  const posInCode = Math.min(Math.max(0, relativePos - codeStart), codeBody.length)
-                  setTimeout(() => {
-                    textarea.focus()
-                    textarea.setSelectionRange(posInCode, posInCode)
-                  }, 0)
+              const textarea = editor.querySelector('.code-editor-textarea')
+              if (textarea) {
+                const firstNewline = raw.indexOf('\n')
+                const codeStart = firstNewline + 1
+                const closingFence = raw.lastIndexOf('\n```')
+                const codeEnd = closingFence > 0 ? closingFence : raw.length - 3
+                
+                // Calculate position within the code content (not the raw markdown)
+                const relativePos = cursorPos - startPos
+                
+                // Adjust position to be within the code body
+                let posInCode = 0
+                if (relativePos <= codeStart) {
+                  // Cursor was in the opening fence line, place at start of code
+                  posInCode = 0
+                } else if (relativePos >= codeEnd) {
+                  // Cursor was in or after closing fence, place at end of code
+                  posInCode = textarea.value.length
+                } else {
+                  // Cursor was in the code body
+                  posInCode = Math.min(relativePos - codeStart, textarea.value.length)
                 }
+                
+                // Focus and set cursor position
+                setTimeout(() => {
+                  textarea.focus()
+                  textarea.setSelectionRange(posInCode, posInCode)
+                }, 10)
               }
             }
           }
