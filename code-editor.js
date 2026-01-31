@@ -1,6 +1,6 @@
 /**
  * Code Editor Module
- * Extensible syntax highlighting and code execution for textarea.my
+ * Extensible syntax highlighting and code execution for onURL.space
  */
 
 // Shared token patterns for C-like languages
