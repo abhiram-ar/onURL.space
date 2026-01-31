@@ -111,6 +111,253 @@
     cursor: pointer;
   }
 
+  /* JavaScript syntax highlighting */
+  .js-keyword {
+    color: #cf222e;
+    @media (prefers-color-scheme: dark) {
+      color: #ff7b72;
+    }
+  }
+
+  .js-string {
+    color: #0a3069;
+    @media (prefers-color-scheme: dark) {
+      color: #a5d6ff;
+    }
+  }
+
+  .js-number {
+    color: #0550ae;
+    @media (prefers-color-scheme: dark) {
+      color: #79c0ff;
+    }
+  }
+
+  .js-comment {
+    color: #6e7781;
+    @media (prefers-color-scheme: dark) {
+      color: #8b949e;
+    }
+  }
+
+  .js-function {
+    color: #8250df;
+    @media (prefers-color-scheme: dark) {
+      color: #d2a8ff;
+    }
+  }
+
+  .js-operator {
+    color: #cf222e;
+    @media (prefers-color-scheme: dark) {
+      color: #ff7b72;
+    }
+  }
+
+  .js-builtin {
+    color: #953800;
+    @media (prefers-color-scheme: dark) {
+      color: #ffa657;
+    }
+  }
+
+  .js-regex {
+    color: #116329;
+    @media (prefers-color-scheme: dark) {
+      color: #7ee787;
+    }
+  }
+
+  /* Interactive Code Editor */
+  .code-editor {
+    display: block;
+    margin: 12px 0;
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid #e1e4e8;
+    background: #f6f8fa;
+    @media (prefers-color-scheme: dark) {
+      border-color: #30363d;
+      background: #161b22;
+    }
+  }
+
+  .code-editor-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 12px;
+    background: #f1f3f5;
+    border-bottom: 1px solid #e1e4e8;
+    @media (prefers-color-scheme: dark) {
+      background: #21262d;
+      border-color: #30363d;
+    }
+  }
+
+  .code-editor-lang {
+    font-size: 12px;
+    font-weight: 600;
+    color: #57606a;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    @media (prefers-color-scheme: dark) {
+      color: #8b949e;
+    }
+  }
+
+  .code-editor-actions {
+    display: flex;
+    gap: 6px;
+  }
+
+  .code-editor-btn {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 10px;
+    font-size: 12px;
+    font-weight: 500;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    font-family: system-ui;
+  }
+
+  .code-editor-btn.copy {
+    background: #e1e4e8;
+    color: #24292f;
+    @media (prefers-color-scheme: dark) {
+      background: #30363d;
+      color: #c9d1d9;
+    }
+  }
+
+  .code-editor-btn.copy:hover {
+    background: #d0d7de;
+    @media (prefers-color-scheme: dark) {
+      background: #484f58;
+    }
+  }
+
+  .code-editor-btn.run {
+    background: #238636;
+    color: #fff;
+  }
+
+  .code-editor-btn.run:hover {
+    background: #2ea043;
+  }
+
+  .code-editor-btn svg {
+    width: 14px;
+    height: 14px;
+  }
+
+  .code-editor-body {
+    position: relative;
+  }
+
+  .code-editor-textarea {
+    display: block;
+    width: 100%;
+    min-height: 80px;
+    padding: 12px;
+    margin: 0;
+    font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;
+    font-size: 14px;
+    line-height: 1.5;
+    tab-size: 2;
+    border: none;
+    outline: none;
+    resize: none;
+    background: transparent;
+    color: transparent;
+    caret-color: var(--text);
+    white-space: pre;
+    overflow: auto;
+    position: relative;
+    z-index: 1;
+  }
+
+  .code-editor-highlight {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    padding: 12px;
+    margin: 0;
+    font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;
+    font-size: 14px;
+    line-height: 1.5;
+    tab-size: 2;
+    white-space: pre;
+    pointer-events: none;
+    overflow: auto;
+    z-index: 0;
+  }
+
+  .code-editor-output {
+    border-top: 1px solid #e1e4e8;
+    background: #1b1f23;
+    color: #c9d1d9;
+    @media (prefers-color-scheme: dark) {
+      border-color: #30363d;
+    }
+  }
+
+  .code-editor-output-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 6px 12px;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: #8b949e;
+    background: #161b22;
+  }
+
+  .code-editor-output-clear {
+    background: none;
+    border: none;
+    color: #8b949e;
+    cursor: pointer;
+    font-size: 11px;
+    padding: 2px 6px;
+    border-radius: 4px;
+  }
+
+  .code-editor-output-clear:hover {
+    background: #30363d;
+    color: #c9d1d9;
+  }
+
+  .code-editor-output-content {
+    padding: 10px 12px;
+    font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;
+    font-size: 13px;
+    line-height: 1.5;
+    max-height: 200px;
+    overflow-y: auto;
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+
+  .code-editor-output-content:empty::before {
+    content: 'No output yet. Click Run to execute.';
+    color: #6e7681;
+    font-style: italic;
+  }
+
+  .code-editor-output-content .log { color: #c9d1d9; }
+  .code-editor-output-content .error { color: #f85149; }
+  .code-editor-output-content .warn { color: #d29922; }
+  .code-editor-output-content .info { color: #58a6ff; }
+
   #button {
     -webkit-tap-highlight-color: transparent;
     background-color: #0569fa;
@@ -369,12 +616,29 @@
 
   async function get() {
     const style = article.getAttribute('style')
-    const content = article.textContent + (style !== null ? '\x00' + style : '')
+    const content = getArticleContent() + (style !== null ? '\x00' + style : '')
     return '#' + await compress(content)
   }
 
+  function getArticleContent() {
+    // Walk through article children and extract text, including raw code from code editors
+    let content = ''
+    const walk = (node) => {
+      if (node.nodeType === Node.TEXT_NODE) {
+        content += node.textContent
+      } else if (node.classList?.contains('code-editor')) {
+        content += node.dataset.raw || ''
+      } else if (node.childNodes) {
+        node.childNodes.forEach(walk)
+      }
+    }
+    walk(article)
+    return content
+  }
+
   function updateTitle() {
-    const match = article.textContent.match(/^\n*#(.+)\n/)
+    const content = getArticleContent()
+    const match = content.match(/^\n*#(.+)\n/)
     document.title = match?.[1] ?? 'Textarea'
   }
 
@@ -443,7 +707,7 @@
 
   async function downloadTXT() {
     updateTitle()
-    const text = article.textContent
+    const text = getArticleContent()
 
     if ('showSaveFilePicker' in window) {
       try {
@@ -472,8 +736,278 @@
     URL.revokeObjectURL(url)
   }
 
-  function parseMarkdown(element) {
-    const input = element.textContent
+  const jsKeywords = new Set([
+    'async', 'await', 'break', 'case', 'catch', 'class', 'const', 'continue',
+    'debugger', 'default', 'delete', 'do', 'else', 'export', 'extends', 'finally',
+    'for', 'function', 'if', 'import', 'in', 'instanceof', 'let', 'new', 'of',
+    'return', 'static', 'super', 'switch', 'this', 'throw', 'try', 'typeof',
+    'var', 'void', 'while', 'with', 'yield', 'true', 'false', 'null', 'undefined'
+  ])
+
+  const jsBuiltins = new Set([
+    'console', 'window', 'document', 'Array', 'Object', 'String', 'Number',
+    'Boolean', 'Function', 'Symbol', 'Map', 'Set', 'WeakMap', 'WeakSet',
+    'Promise', 'Proxy', 'Reflect', 'JSON', 'Math', 'Date', 'RegExp', 'Error',
+    'TypeError', 'SyntaxError', 'ReferenceError', 'parseInt', 'parseFloat',
+    'isNaN', 'isFinite', 'encodeURI', 'decodeURI', 'setTimeout', 'setInterval',
+    'clearTimeout', 'clearInterval', 'fetch', 'URL', 'URLSearchParams',
+    'TextEncoder', 'TextDecoder', 'Blob', 'File', 'FileReader', 'FormData',
+    'XMLHttpRequest', 'WebSocket', 'localStorage', 'sessionStorage',
+    'Uint8Array', 'Int8Array', 'Uint16Array', 'Int16Array', 'Uint32Array',
+    'Int32Array', 'Float32Array', 'Float64Array', 'ArrayBuffer', 'DataView'
+  ])
+
+  const jsTokenPatterns = [
+    { type: 'comment', re: /\/\/[^\n]*/y },
+    { type: 'comment', re: /\/\*[\s\S]*?\*\//y },
+    { type: 'string', re: /"(?:[^"\\]|\\.)*"/y },
+    { type: 'string', re: /'(?:[^'\\]|\\.)*'/y },
+    { type: 'string', re: /`(?:[^`\\]|\\.)*`/y },
+    { type: 'regex', re: /\/(?![*/])(?:[^\\/\n]|\\.)+\/[gimsuy]*/y },
+    { type: 'number', re: /\b(?:0x[\da-fA-F]+|0b[01]+|0o[0-7]+|\d+\.?\d*(?:e[+-]?\d+)?)\b/y },
+    { type: 'operator', re: /[+\-*/%=<>!&|^~?:]+|\.{3}/y },
+    { type: 'word', re: /[a-zA-Z_$][\w$]*/y },
+    { type: 'punctuation', re: /[{}()\[\];,.]/y },
+    { type: 'whitespace', re: /\s+/y },
+  ]
+
+  function highlightJSCode(code) {
+    let html = ''
+    let i = 0
+    const escapeHtml = s => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+
+    while (i < code.length) {
+      let matched = false
+      for (const pat of jsTokenPatterns) {
+        pat.re.lastIndex = i
+        const match = pat.re.exec(code)
+        if (match && match.index === i) {
+          const token = match[0]
+          let className = null
+
+          if (pat.type === 'comment') className = 'js-comment'
+          else if (pat.type === 'string') className = 'js-string'
+          else if (pat.type === 'number') className = 'js-number'
+          else if (pat.type === 'regex') className = 'js-regex'
+          else if (pat.type === 'operator') className = 'js-operator'
+          else if (pat.type === 'word') {
+            if (jsKeywords.has(token)) className = 'js-keyword'
+            else if (jsBuiltins.has(token)) className = 'js-builtin'
+            else if (i + token.length < code.length && code[i + token.length] === '(') className = 'js-function'
+          }
+
+          html += className ? `<span class="${className}">${escapeHtml(token)}</span>` : escapeHtml(token)
+          i += token.length
+          matched = true
+          break
+        }
+      }
+      if (!matched) {
+        html += escapeHtml(code[i])
+        i++
+      }
+    }
+    return html
+  }
+
+  function createCodeEditor(rawCode) {
+    // Extract the code body from the fenced block
+    const firstNewline = rawCode.indexOf('\n')
+    const codeBody = rawCode.slice(firstNewline + 1, -4).trim() // Remove fence and closing ```
+
+    const container = document.createElement('div')
+    container.className = 'code-editor'
+    container.contentEditable = 'false'
+
+    // Store raw markdown for saving
+    container.dataset.raw = rawCode
+
+    // Header with language label and action buttons
+    const header = document.createElement('div')
+    header.className = 'code-editor-header'
+
+    const langLabel = document.createElement('span')
+    langLabel.className = 'code-editor-lang'
+    langLabel.textContent = 'JavaScript'
+
+    const actions = document.createElement('div')
+    actions.className = 'code-editor-actions'
+
+    const copyBtn = document.createElement('button')
+    copyBtn.className = 'code-editor-btn copy'
+    copyBtn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy`
+
+    const runBtn = document.createElement('button')
+    runBtn.className = 'code-editor-btn run'
+    runBtn.innerHTML = `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>Run`
+
+    actions.appendChild(copyBtn)
+    actions.appendChild(runBtn)
+    header.appendChild(langLabel)
+    header.appendChild(actions)
+
+    // Code body with textarea for editing
+    const body = document.createElement('div')
+    body.className = 'code-editor-body'
+
+    const textarea = document.createElement('textarea')
+    textarea.className = 'code-editor-textarea'
+    textarea.value = codeBody
+    textarea.spellcheck = false
+    textarea.autocomplete = 'off'
+    textarea.autocapitalize = 'off'
+
+    // Syntax highlighting overlay
+    const highlight = document.createElement('pre')
+    highlight.className = 'code-editor-highlight'
+    highlight.innerHTML = highlightJSCode(codeBody)
+
+    body.appendChild(highlight)
+    body.appendChild(textarea)
+
+    // Output area
+    const output = document.createElement('div')
+    output.className = 'code-editor-output'
+    output.style.display = 'none'
+
+    const outputHeader = document.createElement('div')
+    outputHeader.className = 'code-editor-output-header'
+
+    const outputLabel = document.createElement('span')
+    outputLabel.textContent = 'Output'
+
+    const clearBtn = document.createElement('button')
+    clearBtn.className = 'code-editor-output-clear'
+    clearBtn.textContent = 'Clear'
+
+    outputHeader.appendChild(outputLabel)
+    outputHeader.appendChild(clearBtn)
+
+    const outputContent = document.createElement('div')
+    outputContent.className = 'code-editor-output-content'
+
+    output.appendChild(outputHeader)
+    output.appendChild(outputContent)
+
+    container.appendChild(header)
+    container.appendChild(body)
+    container.appendChild(output)
+
+    // Calculate initial height based on content lines to prevent flicker
+    const lineCount = codeBody.split('\n').length
+    const lineHeight = 21 // 14px font * 1.5 line-height
+    const padding = 24 // 12px top + 12px bottom
+    const initialHeight = Math.max(80, lineCount * lineHeight + padding)
+    textarea.style.height = initialHeight + 'px'
+
+    // Auto-resize textarea and sync highlight
+    const autoResize = () => {
+      textarea.style.height = 'auto'
+      textarea.style.height = textarea.scrollHeight + 'px'
+    }
+    const updateHighlight = () => {
+      highlight.innerHTML = highlightJSCode(textarea.value)
+    }
+    textarea.addEventListener('input', () => {
+      autoResize()
+      updateHighlight()
+    })
+    textarea.addEventListener('scroll', () => {
+      highlight.scrollTop = textarea.scrollTop
+      highlight.scrollLeft = textarea.scrollLeft
+    })
+
+    // Update raw data when code changes (for saving)
+    const debouncedSave = debounce(500, save)
+    textarea.addEventListener('input', () => {
+      const lang = rawCode.match(/^```(\w*)/)?.[1] || 'js'
+      container.dataset.raw = '```' + lang + '\n' + textarea.value + '\n```'
+      // Trigger save directly (input is stopped from bubbling)
+      debouncedSave()
+    })
+
+    // Copy button
+    copyBtn.addEventListener('click', async (e) => {
+      e.stopPropagation()
+      try {
+        await navigator.clipboard.writeText(textarea.value)
+        copyBtn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>Copied!`
+        setTimeout(() => {
+          copyBtn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy`
+        }, 2000)
+      } catch (err) {
+        console.error('Failed to copy:', err)
+      }
+    })
+
+    // Run button
+    runBtn.addEventListener('click', (e) => {
+      e.stopPropagation()
+      output.style.display = 'block'
+      outputContent.innerHTML = ''
+
+      // Create a custom console to capture output
+      const logs = []
+      const customConsole = {
+        log: (...args) => logs.push({ type: 'log', args }),
+        error: (...args) => logs.push({ type: 'error', args }),
+        warn: (...args) => logs.push({ type: 'warn', args }),
+        info: (...args) => logs.push({ type: 'info', args }),
+        clear: () => { logs.length = 0 },
+      }
+
+      try {
+        // Create a function with custom console in scope
+        const fn = new Function('console', textarea.value)
+        fn(customConsole)
+
+        // Render logs
+        logs.forEach(({ type, args }) => {
+          const line = document.createElement('div')
+          line.className = type
+          line.textContent = args.map(arg => {
+            if (typeof arg === 'object') {
+              try { return JSON.stringify(arg, null, 2) }
+              catch { return String(arg) }
+            }
+            return String(arg)
+          }).join(' ')
+          outputContent.appendChild(line)
+        })
+
+        if (logs.length === 0) {
+          const line = document.createElement('div')
+          line.className = 'info'
+          line.textContent = '✓ Code executed successfully (no output)'
+          outputContent.appendChild(line)
+        }
+      } catch (err) {
+        const line = document.createElement('div')
+        line.className = 'error'
+        line.textContent = err.toString()
+        outputContent.appendChild(line)
+      }
+    })
+
+    // Clear button
+    clearBtn.addEventListener('click', (e) => {
+      e.stopPropagation()
+      output.style.display = 'none'
+      outputContent.innerHTML = ''
+    })
+
+    // Prevent editor from handling clicks inside code editor
+    container.addEventListener('click', e => e.stopPropagation())
+    container.addEventListener('mousedown', e => e.stopPropagation())
+    container.addEventListener('keydown', e => e.stopPropagation())
+    container.addEventListener('keyup', e => e.stopPropagation())
+    container.addEventListener('input', e => e.stopPropagation())
+
+    return container
+  }
+
+  function parseMarkdown() {
+    const input = getArticleContent()
     const frag = document.createDocumentFragment()
 
     const matchers = [
@@ -512,6 +1046,8 @@
             a.target = '_blank'
             a.rel = 'noopener noreferrer'
             frag.appendChild(a)
+          } else if (m.name === 'md-codeblock' && /^```(js|javascript)/i.test(raw)) {
+            frag.appendChild(createCodeEditor(raw))
           } else {
             const span = document.createElement('span')
             span.className = m.name
@@ -545,6 +1081,12 @@
     article.textContent = ''
     article.appendChild(frag)
     article.normalize()
+
+    // Ensure there's a text node after any code editor at the end so user can type after it
+    const lastChild = article.lastChild
+    if (lastChild?.classList?.contains('code-editor')) {
+      article.appendChild(document.createTextNode('\n'))
+    }
   }
 
   function initUI() {
@@ -622,7 +1164,19 @@
     const history = []
     let at = -1, prev
 
+    const isInsideCodeEditor = () => {
+      const sel = window.getSelection()
+      if (!sel.anchorNode) return false
+      let node = sel.anchorNode
+      while (node && node !== element) {
+        if (node.classList?.contains('code-editor')) return true
+        node = node.parentNode
+      }
+      return false
+    }
+
     const debounceHighlight = debounce(30, () => {
+      if (isInsideCodeEditor()) return
       const pos = save()
       highlight(element)
       restore(pos)
@@ -855,7 +1409,8 @@
       while (el) {
         if (visitor(el) === 'stop') break
         if (el.nextSibling) queue.push(el.nextSibling)
-        if (el.firstChild) queue.push(el.firstChild)
+        // Skip children of code-editor elements (they're non-editable)
+        if (el.firstChild && !el.classList?.contains('code-editor')) queue.push(el.firstChild)
         el = queue.pop()
       }
     }

@@ -11,6 +11,13 @@ A _minimalist_ text editor that lives entirely in your browser and stores everyt
 - 🗜️ **Compression** – Your text gets compressed with deflate
 - 🔗 **URL hash** – Share your notes by copying a URL
 - 💕 **Style** – Customize the look with CSS via DevTools
+- 💻 **Code Blocks** – JavaScript code blocks become interactive editors with syntax highlighting, Run, and Copy buttons
+
+  ````
+  ```js
+  console.log("Hello, world!")
+  ```
+  ````
 
 ## Pro tips
 
