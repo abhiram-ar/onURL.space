@@ -1,7 +1,8 @@
-const CACHE_NAME = 'textarea-2026-01-07'
+const CACHE_NAME = 'textarea-2026-01-31'
 const ASSETS = [
   '/',
   '/qr',
+  '/code-editor.js',
 ]
 
 self.addEventListener('install', (event) => {
