@@ -1,25 +1,59 @@
 <!DOCTYPE html>
+<html lang="en">
+<head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
-<meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#f0eee6" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0d1117" media="(prefers-color-scheme: dark)">
+
+<!-- SEO Meta Tags -->
+<title>onURL.space - Minimalist Text Editor in Your Browser</title>
+<meta name="description"
+  content="A minimalist text editor that stores content in the URL. No server, no database - your notes live entirely in the browser. Share instantly via URL or QR code.">
+<meta name="keywords" content="text editor, online notepad, URL storage, browser notes, code editor, markdown editor, share notes, QR code, no signup, privacy">
+<meta name="author" content="onURL.space">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://onurl.space/">
+
+<!-- Open Graph / Facebook -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://onurl.space/">
+<meta property="og:title" content="onURL.space - Minimalist Text Editor in Your Browser">
+<meta property="og:description" content="A minimalist text editor that stores content in the URL. No server, no database - share notes instantly via URL or QR code.">
+<meta property="og:image" content="https://onurl.space/assets/android-chrome-512x512.png">
+<meta property="og:image:width" content="512">
+<meta property="og:image:height" content="512">
+<meta property="og:site_name" content="onURL.space">
+<meta property="og:locale" content="en_US">
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary">
+<meta name="twitter:url" content="https://onurl.space/">
+<meta name="twitter:title" content="onURL.space - Minimalist Text Editor in Your Browser">
+<meta name="twitter:description" content="A minimalist text editor that stores content in the URL. No server, no database - share notes instantly via URL or QR code.">
+<meta name="twitter:image" content="https://onurl.space/assets/android-chrome-512x512.png">
+
+<!-- Additional SEO -->
+<meta name="application-name" content="onURL.space">
+<meta name="apple-mobile-web-app-title" content="onURL.space">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="format-detection" content="telephone=no">
 
 <!-- Security meta tags -->
 <meta http-equiv="X-Content-Type-Options" content="nosniff">
 <meta http-equiv="Content-Security-Policy"
   content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://fonts.googleapis.com https://fonts.gstatic.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self';">
 <meta name="referrer" content="strict-origin-when-cross-origin">
-<meta name="description"
-  content="A minimalist text editor that stores content in the URL. No server, no database - your notes live entirely in the browser and URL.">
-<meta name="author" content="onURL.space">
 
-<title>Space onURL</title>
-
+<!-- Favicons -->
 <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png">
-<link rel="icon" type="image/png" sizes="32x32" href="assets/">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32x32.png">
 <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon-16x16.png">
 <link rel="manifest" href="assets/site.webmanifest">
 
+<!-- Fonts -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link
@@ -27,6 +61,34 @@
   rel="stylesheet">
 <link rel="stylesheet"
   href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0" />
+
+<!-- Structured Data -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "onURL.space",
+  "url": "https://onurl.space",
+  "description": "A minimalist text editor that stores content in the URL. No server, no database - your notes live entirely in the browser.",
+  "applicationCategory": "ProductivityApplication",
+  "operatingSystem": "Any",
+  "browserRequirements": "Requires JavaScript",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "featureList": [
+    "URL-based storage",
+    "No account required",
+    "Syntax highlighting",
+    "Code execution",
+    "QR code sharing",
+    "Markdown support",
+    "Works offline"
+  ]
+}
+</script>
 
 <style>
   * {
@@ -715,6 +777,201 @@
     color: #58a6ff;
   }
 
+  /* Code Execution Dialog */
+  .ce-dialog-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(0.25em);
+    -webkit-backdrop-filter: blur(0.25em);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+  }
+
+  .ce-dialog-overlay.visible {
+    opacity: 1;
+  }
+
+  .ce-dialog {
+    background: #ffffff;
+    border-radius: 16px;
+    padding: 28px;
+    max-width: 380px;
+    width: calc(100% - 32px);
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(0, 0, 0, 0.05);
+    text-align: center;
+    transform: scale(0.95) translateY(10px);
+    transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  html[data-theme="dark"] .ce-dialog {
+    background: #1c2128;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.1);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    .ce-dialog {
+      background: #1c2128;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.1);
+    }
+  }
+
+  html[data-theme="light"] .ce-dialog {
+    background: #ffffff;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(0, 0, 0, 0.05);
+  }
+
+  .ce-dialog-overlay.visible .ce-dialog {
+    transform: scale(1) translateY(0);
+  }
+
+  .ce-dialog-icon {
+    width: 48px;
+    height: 48px;
+    margin: 0 auto 16px;
+    background: rgba(0, 0, 0, 0.05);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .ce-dialog-icon svg {
+    width: 24px;
+    height: 24px;
+    color: var(--text);
+    opacity: 0.7;
+  }
+
+  html[data-theme="dark"] .ce-dialog-icon {
+    background: rgba(255, 255, 255, 0.08);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    .ce-dialog-icon {
+      background: rgba(255, 255, 255, 0.08);
+    }
+  }
+
+  html[data-theme="light"] .ce-dialog-icon {
+    background: rgba(0, 0, 0, 0.05);
+  }
+
+  .ce-dialog-title {
+    font-size: 22px;
+    font-weight: 700;
+    margin: 0 0 10px;
+    color: var(--text);
+    letter-spacing: -0.02em;
+  }
+
+  .ce-dialog-desc {
+    font-size: 14px;
+    line-height: 1.5;
+    color: var(--text);
+    opacity: 0.75;
+    margin: 0 0 20px;
+  }
+
+  .ce-dialog-checkbox {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    font-size: 13px;
+    color: var(--text);
+    opacity: 0.7;
+    margin-bottom: 20px;
+    cursor: pointer;
+    user-select: none;
+  }
+
+  .ce-dialog-checkbox input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    accent-color: var(--primary);
+    cursor: pointer;
+  }
+
+  .ce-dialog-checkbox:hover {
+    opacity: 0.9;
+  }
+
+  .ce-dialog-actions {
+    display: flex;
+    gap: 10px;
+  }
+
+  .ce-dialog-btn {
+    flex: 1;
+    padding: 12px 20px;
+    font-size: 14px;
+    font-weight: 500;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-family: var(--font-sans);
+    transition: all 0.15s ease;
+  }
+
+  .ce-dialog-btn.cancel {
+    background: rgba(0, 0, 0, 0.06);
+    color: var(--text);
+  }
+
+  .ce-dialog-btn.cancel:hover {
+    background: rgba(0, 0, 0, 0.1);
+  }
+
+  html[data-theme="dark"] .ce-dialog-btn.cancel {
+    background: rgba(255, 255, 255, 0.08);
+  }
+
+  html[data-theme="dark"] .ce-dialog-btn.cancel:hover {
+    background: rgba(255, 255, 255, 0.12);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    .ce-dialog-btn.cancel {
+      background: rgba(255, 255, 255, 0.08);
+    }
+    .ce-dialog-btn.cancel:hover {
+      background: rgba(255, 255, 255, 0.12);
+    }
+  }
+
+  html[data-theme="light"] .ce-dialog-btn.cancel {
+    background: rgba(0, 0, 0, 0.06);
+  }
+
+  html[data-theme="light"] .ce-dialog-btn.cancel:hover {
+    background: rgba(0, 0, 0, 0.1);
+  }
+
+  .ce-dialog-btn.confirm {
+    background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+    color: white;
+    box-shadow: 0 2px 8px rgba(34, 197, 94, 0.3);
+  }
+
+  .ce-dialog-btn.confirm:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(34, 197, 94, 0.4);
+  }
+
+  .ce-dialog-btn.confirm:active {
+    transform: translateY(0);
+  }
+
+  .ce-dialog-btn:focus-visible {
+    outline: 2px solid var(--outline);
+    outline-offset: 2px;
+  }
+
   #toolbar {
     position: fixed;
     top: 12px;
@@ -1071,9 +1328,11 @@
     }
   }
 </style>
+</head>
+<body>
 <article contenteditable="plaintext-only" spellcheck></article>
 <div id="placeholder">
-  <h1>Welcome to space onURL <span style="font-weight: 100;"> (⌐■_■) </span></h1>
+  <h1>Welcome to onURL space <span style="font-weight: 100;"> (⌐■_■) </span></h1>
   <p>A minimalist text editor that lives entirely in your browser and stores everything in the URL.</p>
   <h2>Features</h2>
   <ul>
@@ -1417,7 +1676,7 @@
   function updateTitle() {
     const content = getArticleContent()
     const match = content.match(/^\n*#(.+)\n/)
-    document.title = match?.[1] ?? 'space onURL'
+    document.title = match?.[1] ?? 'onURL space'
   }
 
   async function compress(string) {
@@ -2197,3 +2456,5 @@
   </symbol>
   <symbol id="icon-empty" viewBox="0 0 24 24"></symbol>
 </svg>
+</body>
+</html>

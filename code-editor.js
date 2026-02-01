@@ -330,37 +330,133 @@ function stripTypeAnnotations(code) {
     .replace(/^(interface|type)\s+.*$/gm, '')
 }
 
-// Session-based user consent for code execution
+// Persistent user consent for code execution (stored in localStorage)
 let userAcknowledgedCodeExecution = false
 try {
-  userAcknowledgedCodeExecution = sessionStorage.getItem('codeExecutionAcknowledged') === 'true'
+  userAcknowledgedCodeExecution = localStorage.getItem('codeExecutionAcknowledged') === 'true'
 } catch (e) {
-  // sessionStorage may not be available
+  // localStorage may not be available
+}
+
+// Pre-parsed dialog template for better performance
+const dialogTemplate = document.createElement('template')
+dialogTemplate.innerHTML = `
+  <div class="ce-dialog-overlay">
+    <div class="ce-dialog" role="alertdialog" aria-modal="true" aria-labelledby="ce-dialog-title" aria-describedby="ce-dialog-desc">
+      <div class="ce-dialog-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="4 17 10 11 4 5"/>
+          <line x1="12" y1="19" x2="20" y2="19"/>
+        </svg>
+      </div>
+      <h3 class="ce-dialog-title" id="ce-dialog-title">Hold on!</h3>
+      <p class="ce-dialog-desc" id="ce-dialog-desc">
+        You're about to unleash some JavaScript magic in your browser! 
+        Make sure you trust the code before hitting that button. 
+      </p>
+      <label class="ce-dialog-checkbox">
+        <input type="checkbox" id="ce-dialog-remember">
+        <span>I know what I'm doing, don't ask again</span>
+      </label>
+      <div class="ce-dialog-actions">
+        <button class="ce-dialog-btn cancel" id="ce-dialog-cancel">Nope, Cancel</button>
+        <button class="ce-dialog-btn confirm" id="ce-dialog-confirm">Let's Go!</button>
+      </div>
+    </div>
+  </div>
+`
+
+// Custom dialog for code execution confirmation
+function showExecutionDialog() {
+  return new Promise((resolve) => {
+    // Clone the template content
+    const overlay = dialogTemplate.content.cloneNode(true).firstElementChild
+    const dialog = overlay.querySelector('.ce-dialog')
+    
+    document.body.appendChild(overlay)
+    
+    // Get interactive elements
+    const confirmBtn = dialog.querySelector('#ce-dialog-confirm')
+    const cancelBtn = dialog.querySelector('#ce-dialog-cancel')
+    const rememberCheckbox = dialog.querySelector('#ce-dialog-remember')
+    
+    // Trigger animation
+    requestAnimationFrame(() => {
+      overlay.classList.add('visible')
+    })
+    
+    const cleanup = () => {
+      overlay.classList.remove('visible')
+      setTimeout(() => overlay.remove(), 200)
+    }
+    
+    const handleConfirm = () => {
+      if (rememberCheckbox.checked) {
+        userAcknowledgedCodeExecution = true
+        try {
+          localStorage.setItem('codeExecutionAcknowledged', 'true')
+        } catch (e) {}
+      }
+      cleanup()
+      resolve(true)
+    }
+    
+    const handleCancel = () => {
+      cleanup()
+      resolve(false)
+    }
+    
+    confirmBtn.addEventListener('click', handleConfirm)
+    cancelBtn.addEventListener('click', handleCancel)
+    overlay.addEventListener('click', (e) => {
+      if (e.target === overlay) handleCancel()
+    })
+    
+    // Keyboard handling
+    const handleKeydown = (e) => {
+      if (e.key === 'Escape') {
+        handleCancel()
+      } else if (e.key === 'Enter' && document.activeElement !== cancelBtn) {
+        handleConfirm()
+      } else if (e.key === 'Tab') {
+        // Trap focus within dialog
+        const focusable = dialog.querySelectorAll('button, input[type="checkbox"]')
+        const first = focusable[0]
+        const last = focusable[focusable.length - 1]
+        
+        if (e.shiftKey && document.activeElement === first) {
+          e.preventDefault()
+          last.focus()
+        } else if (!e.shiftKey && document.activeElement === last) {
+          e.preventDefault()
+          first.focus()
+        }
+      }
+    }
+    
+    document.addEventListener('keydown', handleKeydown)
+    overlay.addEventListener('transitionend', () => {
+      if (!overlay.classList.contains('visible')) {
+        document.removeEventListener('keydown', handleKeydown)
+      }
+    })
+    
+    // Focus confirm button after animation
+    setTimeout(() => confirmBtn.focus(), 50)
+  })
 }
 
 // Execute JavaScript/TypeScript code
-function executeCode(code, langAlias, outputContent) {
+async function executeCode(code, langAlias, outputContent) {
   // Show warning on first execution per session
   if (!userAcknowledgedCodeExecution) {
-    const confirmed = confirm(
-      '⚠️ Code Execution Warning\n\n' +
-      'You are about to execute JavaScript code in your browser. ' +
-      'Only run code that you trust.\n\n' +
-      'This code runs locally in your browser and has access to browser APIs.\n\n' +
-      'Do you want to continue?'
-    )
+    const confirmed = await showExecutionDialog()
     if (!confirmed) {
       const line = document.createElement('div')
       line.className = 'info'
       line.textContent = 'Execution cancelled by user.'
       outputContent.appendChild(line)
       return
-    }
-    userAcknowledgedCodeExecution = true
-    try {
-      sessionStorage.setItem('codeExecutionAcknowledged', 'true')
-    } catch (e) {
-      // sessionStorage may not be available
     }
   }
 
@@ -503,7 +599,7 @@ function createCodeEditor(rawCode, saveCallback) {
     const btn = document.createElement('button')
     btn.className = 'code-editor-btn run'
     btn.innerHTML = icons.run + 'Run'
-    btn.onclick = e => {
+    btn.onclick = async e => {
       e.stopPropagation()
       if (!output) {
         const outputArea = createOutputArea(() => {
@@ -516,7 +612,7 @@ function createCodeEditor(rawCode, saveCallback) {
       }
       output.style.display = 'block'
       outputContent.innerHTML = ''
-      executeCode(textarea.value, currentLangAlias, outputContent)
+      await executeCode(textarea.value, currentLangAlias, outputContent)
     }
     return btn
   }
