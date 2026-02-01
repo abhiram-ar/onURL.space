@@ -1,8 +1,12 @@
-const CACHE_NAME = 'textarea-2026-02-01-v11'
+const CACHE_NAME = 'textarea-2026-02-01-v12'
 const ASSETS = [
-  '/',
-  '/qr',
+  '/',    // main index.html
+  '/qr',  // qr.html
   '/code-editor.js',
+  '/assets/apple-touch-icon.png',
+  '/assets/favicon-32x32.png',
+  '/assets/favicon-16x16.png',
+  '/assets/favicon.ico',
 ]
 
 self.addEventListener('install', (event) => {
