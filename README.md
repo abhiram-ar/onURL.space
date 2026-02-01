@@ -1,10 +1,18 @@
+<div align="center">
+
 # [onURL.space](https://onurl.space)
 
-A _minimalist_ text editor that lives entirely in your browser and stores everything in the URL hash.
+**A minimalist text editor that lives entirely in your browser and stores everything in the URL hash**
 
-<p align="center">
-  <img src=".github/image.png" alt="Screenshot of onURL.space" width="100%"/>
-</p>
+
+
+<img src=".github/image.png" alt="Screenshot of onURL.space" width="100%"/>
+
+</div>
+
+
+> onURL.space is an extended fork of [textarea](https://github.com/antonmedv/textarea) by [Anton Medvedev]. While the original project stays lean and minimal by design, this fork layers on extra features and a friendlier UI/UX to make powerful, shareable text editing feel effortless for everyone.
+
 
 ## Features
 
@@ -13,7 +21,7 @@ A _minimalist_ text editor that lives entirely in your browser and stores everyt
 - 💕 **Style** – Customize the look with CSS via DevTools
 - 💻 **Code Blocks** – Fenced code blocks with syntax highlighting; JavaScript/TypeScript can be executed in-browser
 
-  ````
+  ````markdown
   ```js
   console.log("Hello, world!")
   ```
@@ -33,4 +41,7 @@ A _minimalist_ text editor that lives entirely in your browser and stores everyt
 - [An Ode to Comic Sans](https://onurl.space/#TVM9j9w2EE3NX_FwaRJAtwe4SHGu7g5I4MII4HNgpByRI4lZiqPMjFbeVPsj0hiI_9z-koCyDV9FznA-33v8EQ8VvyeGC55kzhHPVC2E73eQaj6xYcs-yeogO-Y6duEBo-aKXOHnRUalZcoRg-jchedJuFBkw1o9c-pghblVUSmFE9alC09KNuU6widGT_XvlR0ywFjzAKoJVXQ-hPAoWlFlf5xJ-8KYqBSDKApt6DXzYF14XB1JJBW2DrYwxwn92ve7TZioptuktFUshakLb7xF0dH2JSbGSXLk1qUZsZCZisxYxJz1Plwv_z0yjrmm7nr5jGbSkWFU-JvjVQMAgzIfrpfPIbyf-Ds8rAaLMgwdKP21mrc-WXFkrTukT2X1OOE3UpqlJpR8ZCxMWgzkSLTVQ_iT_QVV2OjU1lsr9WQTpy48Tcw6rKWcsanUsYP52veitZwh9RDa4ptmZ0Of1adEZ0TSZDvoRcxvk4wYypnVWr1V44TKmxV2bz5YHqvBaeGEqCJHTk1CSUTt0OonYds526ZsCysWZfM8ciNtkY31evl3Z6CJyroG3jsu9PGAD3y9fDoxjLliE7WvWL6VeGxSmnluBztrpbZlX2jmFH4VRdQ8syE7Kp9YQUUqI8o8Z_cGzhtHz6S2U7xxHqddVtM6U4WTOYcP2ScQbM6F4RM5ItXr5VPLBKfsnA4hPNQE81xKa7awWjb_KrNlOYNizImrd-GPGkVKY6gXn1jb7GtVHnJtA73jOdf07RtsoiV1TY8qa03ceqgc2brwvk3SEKVSWlwyVP4C-8akIHjmww8BAHqKx3GvcI9Vy093dzOn0yHLHZmx2505qR3GPPz8ek8YpPrtQHMu53vcvJDX2-eb7qXjpkNc1fKJXyRa_ofv8eqX5eMXZ5Qiet-od34d_gc=)
 
 
-*Made with ❤️ and JavaScript*
+
+<div align="center">
+Made with ❤️ and JavaScript
+</div>
