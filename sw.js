@@ -1,4 +1,4 @@
-const CACHE_NAME = 'textarea-2026-02-01-v12'
+const CACHE_NAME = 'textarea-2026-02-01-v13'
 const ASSETS = [
   '/',    // main index.html
   '/qr',  // qr.html
@@ -34,21 +34,32 @@ self.addEventListener('activate', (event) => {
 self.addEventListener('fetch', (event) => {
   const url = new URL(event.request.url)
 
-  // Runtime caching for Google Fonts
+  // Cache-first strategy for Google Fonts (CSS and font files)
   if (url.origin === 'https://fonts.googleapis.com' || url.origin === 'https://fonts.gstatic.com') {
     event.respondWith(
-      caches.open(CACHE_NAME).then((cache) => {
-        return cache.match(event.request).then((response) => {
-          return response || fetch(event.request).then((networkResponse) => {
-            cache.put(event.request, networkResponse.clone())
-            return networkResponse
-          })
+      caches.match(event.request).then((cachedResponse) => {
+        if (cachedResponse) {
+          return cachedResponse
+        }
+        return fetch(event.request).then((networkResponse) => {
+          // Only cache successful responses
+          if (networkResponse && networkResponse.status === 200) {
+            const responseToCache = networkResponse.clone()
+            caches.open(CACHE_NAME).then((cache) => {
+              cache.put(event.request, responseToCache)
+            })
+          }
+          return networkResponse
+        }).catch(() => {
+          // Return cached version even if stale, or undefined if not cached
+          return caches.match(event.request)
         })
       })
     )
     return
   }
 
+  // Cache-first strategy for app assets
   event.respondWith(
     caches.match(event.request)
       .then((response) => {
